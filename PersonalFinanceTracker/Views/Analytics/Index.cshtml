@@ -5,63 +5,63 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 animate-fade-in">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Financial Analytics</h1>
-            <p class="mt-2 text-gray-600">Advanced insights and financial metrics</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Financial Analytics</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-300">Advanced insights and financial metrics</p>
         </div>
     </div>
 
     <!-- Success/Error Messages -->
     @if (TempData["Success"] != null)
     {
-        <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 animate-fade-in">
+        <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 animate-fade-in">
             <div class="flex items-center">
-                <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span class="text-green-800 font-medium">@TempData["Success"]</span>
+                <span class="text-green-800 dark:text-green-300 font-medium">@TempData["Success"]</span>
             </div>
         </div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
+        <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 animate-fade-in">
             <div class="flex items-center">
-                <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
-                <span class="text-red-800 font-medium">@TempData["Error"]</span>
+                <span class="text-red-800 dark:text-red-300 font-medium">@TempData["Error"]</span>
             </div>
         </div>
     }
 
     <!-- Analytics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Net Worth Over Time</h3>
-            <div class="w-full h-60 bg-gray-50 rounded-lg flex items-center justify-center" id="netWorthChart">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Net Worth Over Time</h3>
+            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="netWorthChart">
                 <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Monthly Income vs. Expenses</h3>
-            <div class="w-full h-60 bg-gray-50 rounded-lg flex items-center justify-center" id="incomeExpenseChart">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Monthly Income vs. Expenses</h3>
+            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="incomeExpenseChart">
                 <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Monthly Savings Rate</h3>
-            <div class="w-full h-60 bg-gray-50 rounded-lg flex items-center justify-center" id="savingsRateChart">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Monthly Savings Rate</h3>
+            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="savingsRateChart">
                 <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                 </div>
             </div>
         </div>
@@ -69,22 +69,22 @@
 
     <!-- Analysis Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Spending By Category</h3>
-            <div class="w-full h-80 bg-gray-50 rounded-lg flex items-center justify-center" id="categorySpendingChart">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Spending By Category</h3>
+            <div class="w-full h-80 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="categorySpendingChart">
                 <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Spending By Day of Week</h3>
-            <div class="w-full h-80 bg-gray-50 rounded-lg flex items-center justify-center" id="dayOfWeekSpendingChart">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Spending By Day of Week</h3>
+            <div class="w-full h-80 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="dayOfWeekSpendingChart">
                 <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                 </div>
             </div>
         </div>
@@ -92,66 +92,66 @@
 
     <!-- Top Insights -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Spending Categories</h3>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Spending Categories</h3>
             <div class="space-y-4" id="topCategories">
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-3/4"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-3/4"></div>
                 </div>
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-2/3"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-2/3"></div>
                 </div>
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-1/2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-1/2"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Merchants</h3>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Merchants</h3>
             <div class="space-y-4" id="topMerchants">
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-3/4"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-3/4"></div>
                 </div>
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-2/3"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-2/3"></div>
                 </div>
                 <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 rounded w-1/2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-1/2"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Future Predictions -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Future Predictions</h3>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Future Predictions</h3>
         <div class="flex flex-col md:flex-row md:space-x-6">
             <div class="w-full md:w-1/2">
-                <h4 class="text-md font-medium text-gray-800 mb-3">Projected Expenses (Next 3 Months)</h4>
-                <div class="w-full h-60 bg-gray-50 rounded-lg flex items-center justify-center" id="projectedExpensesChart">
+                <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">Projected Expenses (Next 3 Months)</h4>
+                <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="projectedExpensesChart">
                     <div class="animate-pulse flex flex-col items-center">
-                        <div class="w-10 h-10 bg-indigo-200 rounded-full mb-2"></div>
-                        <div class="h-2 w-24 bg-indigo-200 rounded"></div>
+                        <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
+                        <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
                     </div>
                 </div>
             </div>
             <div class="w-full md:w-1/2 mt-6 md:mt-0">
-                <h4 class="text-md font-medium text-gray-800 mb-3">AI Financial Recommendations</h4>
-                <div class="space-y-4 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-100">
+                <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">AI Financial Recommendations</h4>
+                <div class="space-y-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 rounded-lg border border-indigo-100 dark:border-indigo-800">
                     <div class="flex items-start space-x-3">
                         <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
                             <span class="text-white text-xs">💡</span>
                         </div>
                         <div>
-                            <h5 class="text-sm font-medium text-gray-800">Savings Opportunity</h5>
-                            <p class="text-sm text-gray-600">Based on your spending patterns, you could save an additional $245 monthly by reducing restaurant expenses.</p>
+                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Savings Opportunity</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Based on your spending patterns, you could save an additional $245 monthly by reducing restaurant expenses.</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3">
@@ -159,8 +159,8 @@
                             <span class="text-white text-xs">📈</span>
                         </div>
                         <div>
-                            <h5 class="text-sm font-medium text-gray-800">Investment Potential</h5>
-                            <p class="text-sm text-gray-600">Redirecting your monthly savings to investments could yield approximately $1,250 annually.</p>
+                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Investment Potential</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Redirecting your monthly savings to investments could yield approximately $1,250 annually.</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3">
@@ -168,8 +168,8 @@
                             <span class="text-white text-xs">🎯</span>
                         </div>
                         <div>
-                            <h5 class="text-sm font-medium text-gray-800">Budget Adjustment</h5>
-                            <p class="text-sm text-gray-600">Your utility spending is 15% higher than similar households. Consider energy-saving measures.</p>
+                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Budget Adjustment</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Your utility spending is 15% higher than similar households. Consider energy-saving measures.</p>
                         </div>
                     </div>
                 </div>
@@ -180,26 +180,26 @@
     <!-- Budget Goals and AI Insights Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Budget Goals Tracking -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">Budget Goals Progress</h3>
-                <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium" onclick="openBudgetGoalModal()">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Budget Goals Progress</h3>
+                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium" onclick="openBudgetGoalModal()">
                     + Add Goal
                 </button>
             </div>
             <div class="space-y-4" id="budgetGoalsContainer">
                 <div class="animate-pulse">
-                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div class="h-3 bg-gray-100 rounded w-full mb-2"></div>
-                    <div class="h-2 bg-gray-200 rounded w-1/2"></div>
+                    <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+                    <div class="h-3 bg-gray-100 dark:bg-gray-700 rounded w-full mb-2"></div>
+                    <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
                 </div>
             </div>
         </div>
 
         <!-- AI Financial Insights -->
-        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200 hover:shadow-md transition-shadow duration-200 animate-slide-in">
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl shadow-sm border border-indigo-200 dark:border-indigo-800 hover:shadow-md transition-shadow duration-200 animate-slide-in">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">AI Financial Insights</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">AI Financial Insights</h3>
                 <button class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all duration-200" onclick="refreshAIInsights()">
                     🤖 Refresh
                 </button>
@@ -210,8 +210,8 @@
                         <span class="text-white text-xs">🔍</span>
                     </div>
                     <div>
-                        <h5 class="text-sm font-medium text-gray-800">Analyzing your financial data...</h5>
-                        <p class="text-sm text-gray-600">AI insights will appear here once analysis is complete.</p>
+                        <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Analyzing your financial data...</h5>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">AI insights will appear here once analysis is complete.</p>
                     </div>
                 </div>
             </div>
@@ -219,41 +219,41 @@
     </div>
 
     <!-- AI Recommendations Dashboard -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Personalized AI Recommendations</h3>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personalized AI Recommendations</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
                 <div class="flex items-center mb-3">
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                         <span class="text-white text-xs">💰</span>
                     </div>
-                    <h4 class="ml-3 text-sm font-semibold text-green-800">Savings Optimization</h4>
+                    <h4 class="ml-3 text-sm font-semibold text-green-800 dark:text-green-300">Savings Optimization</h4>
                 </div>
-                <div id="savingsRecommendation" class="text-sm text-green-700">
+                <div id="savingsRecommendation" class="text-sm text-green-700 dark:text-green-400">
                     Loading personalized savings recommendations...
                 </div>
             </div>
             
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                 <div class="flex items-center mb-3">
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                         <span class="text-white text-xs">📊</span>
                     </div>
-                    <h4 class="ml-3 text-sm font-semibold text-blue-800">Budget Adjustments</h4>
+                    <h4 class="ml-3 text-sm font-semibold text-blue-800 dark:text-blue-300">Budget Adjustments</h4>
                 </div>
-                <div id="budgetRecommendation" class="text-sm text-blue-700">
+                <div id="budgetRecommendation" class="text-sm text-blue-700 dark:text-blue-400">
                     Analyzing spending patterns for budget optimization...
                 </div>
             </div>
             
-            <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
                 <div class="flex items-center mb-3">
                     <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
                         <span class="text-white text-xs">🎯</span>
                     </div>
-                    <h4 class="ml-3 text-sm font-semibold text-purple-800">Investment Opportunities</h4>
+                    <h4 class="ml-3 text-sm font-semibold text-purple-800 dark:text-purple-300">Investment Opportunities</h4>
                 </div>
-                <div id="investmentRecommendation" class="text-sm text-purple-700">
+                <div id="investmentRecommendation" class="text-sm text-purple-700 dark:text-purple-400">
                     Evaluating investment potential based on your profile...
                 </div>
             </div>
@@ -261,13 +261,13 @@
     </div>
 
     <!-- Budget Goal Modal -->
-    <div id="budgetGoalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div id="budgetGoalModal" class="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-75 hidden z-50">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">Add Budget Goal</h3>
-                        <button onclick="closeBudgetGoalModal()" class="text-gray-400 hover:text-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Budget Goal</h3>
+                        <button onclick="closeBudgetGoalModal()" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                             <span class="sr-only">Close</span>
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -276,26 +276,26 @@
                     </div>
                     <form id="budgetGoalForm">
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                            <select id="goalCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
+                            <select id="goalCategory" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
                                 <option value="">Select a category</option>
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Budget Amount</label>
-                            <input type="number" id="goalAmount" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0.00">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Monthly Budget Amount</label>
+                            <input type="number" id="goalAmount" step="0.01" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white" placeholder="0.00">
                         </div>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                            <input type="date" id="goalStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Date</label>
+                            <input type="date" id="goalStartDate" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
                         </div>
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
-                            <textarea id="goalNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Any additional notes..."></textarea>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
+                            <textarea id="goalNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white" placeholder="Any additional notes..."></textarea>
                         </div>
                         <div class="flex justify-end space-x-3">
-                            <button type="button" onclick="closeBudgetGoalModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">Cancel</button>
-                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">Create Goal</button>
+                            <button type="button" onclick="closeBudgetGoalModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">Create Goal</button>
                         </div>
                     </form>
                 </div>

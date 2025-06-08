@@ -4,32 +4,32 @@
 }
 
 <div class="max-w-4xl mx-auto p-6">
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 text-white p-6">
             <div class="flex items-center space-x-3">
-                <div class="bg-white bg-opacity-20 rounded-full p-2">
+                <div class="bg-white bg-opacity-20 dark:bg-white dark:bg-opacity-30 rounded-full p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold">FinBot - AI Financial Assistant</h1>
-                    <p class="text-indigo-100">Your intelligent finance companion</p>
+                    <p class="text-indigo-100 dark:text-indigo-200">Your intelligent finance companion</p>
                 </div>
             </div>
         </div>
 
         <!-- Welcome Message -->
-        <div class="p-6 border-b border-gray-200 bg-blue-50">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
             <div class="flex items-start space-x-3">
-                <div class="bg-blue-500 rounded-full p-2 flex-shrink-0">
+                <div class="bg-blue-500 dark:bg-blue-600 rounded-full p-2 flex-shrink-0">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
                 </div>
                 <div class="flex-1">
-                    <p class="text-blue-800">@Model.WelcomeMessage</p>
+                    <p class="text-blue-800 dark:text-blue-200">@Model.WelcomeMessage</p>
                 </div>
             </div>
         </div>
@@ -37,29 +37,29 @@
         <!-- Chat Container -->
         <div class="flex flex-col h-96">
             <!-- Messages Area -->
-            <div id="messages-container" class="flex-1 p-6 overflow-y-auto space-y-4">
+            <div id="messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-50 dark:bg-gray-900/50">
                 <!-- Messages will be dynamically added here -->
             </div>
 
             <!-- Input Area -->
-            <div class="border-t border-gray-200 p-4">
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
                 <div class="flex space-x-3">
                     <input type="text" 
                            id="message-input" 
                            placeholder="Ask me about your finances..." 
-                           class="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                           class="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
                            autocomplete="off">
                     <button id="send-button" 
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                         Send
                     </button>
                 </div>
-                <div id="typing-indicator" class="hidden mt-2 text-sm text-gray-500">
+                <div id="typing-indicator" class="hidden mt-2 text-sm text-gray-500 dark:text-gray-400">
                     <span class="flex items-center space-x-1">
                         <div class="flex space-x-1">
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                            <div class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                         </div>
                         <span>FinBot is typing...</span>
                     </span>
@@ -71,29 +71,29 @@
     <!-- Keywords and Quick Actions -->
     <div class="mt-6 grid md:grid-cols-2 gap-6">
         <!-- Available Keywords -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Available Keywords</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Available Keywords</h3>
             <div class="space-y-3">
                 @foreach (var keyword in Model.AvailableKeywords)
                 {
-                    <div class="border border-gray-200 rounded-lg p-3">
+                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700">
                         <div class="flex items-center justify-between">
-                            <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-indigo-600">@keyword.Keyword</code>
-                            <button class="keyword-btn text-sm text-indigo-600 hover:text-indigo-800" data-keyword="@keyword.Example">Try it</button>
+                            <code class="bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded text-sm font-mono text-indigo-600 dark:text-indigo-400">@keyword.Keyword</code>
+                            <button class="keyword-btn text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors duration-200" data-keyword="@keyword.Example">Try it</button>
                         </div>
-                        <p class="text-sm text-gray-600 mt-1">@keyword.Description</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">@keyword.Description</p>
                     </div>
                 }
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Quick Actions</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Quick Actions</h3>
             <div class="space-y-2">
                 @foreach (var action in Model.QuickActions)
                 {
-                    <button class="quick-action-btn w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200" data-action="@action.Action">
+                    <button class="quick-action-btn w-full text-left p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-900 dark:text-white" data-action="@action.Action">
                         @action.Text
                     </button>
                 }
@@ -189,10 +189,10 @@
         const bubbleDiv = document.createElement('div');
         bubbleDiv.className = `max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
             type === 'user' 
-                ? 'bg-indigo-600 text-white' 
+                ? 'bg-indigo-600 dark:bg-indigo-500 text-white' 
                 : type === 'error'
-                ? 'bg-red-100 text-red-800 border border-red-200'
-                : 'bg-gray-100 text-gray-800'
+                ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
         }`;
 
         // Handle markdown-style formatting

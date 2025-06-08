@@ -6,64 +6,64 @@
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Financial Dashboard</h1>
-        <p class="text-gray-600">Welcome back! Here's your financial overview.</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Financial Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-300">Welcome back! Here's your financial overview.</p>
     </div>
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
             <div class="flex items-center">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Balance</p>
-                    <p class="text-2xl font-bold text-gray-900">@Model.TotalBalance.ToString("C")</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Total Balance</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">@Model.TotalBalance.ToString("C")</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
             <div class="flex items-center">
-                <div class="p-2 bg-green-100 rounded-lg">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Monthly Income</p>
-                    <p class="text-2xl font-bold text-green-600">@Model.MonthlyIncome.ToString("C")</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Monthly Income</p>
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-400">@Model.MonthlyIncome.ToString("C")</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
             <div class="flex items-center">
-                <div class="p-2 bg-red-100 rounded-lg">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Monthly Expenses</p>
-                    <p class="text-2xl font-bold text-red-600">@Model.MonthlyExpenses.ToString("C")</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Monthly Expenses</p>
+                    <p class="text-2xl font-bold text-red-600 dark:text-red-400">@Model.MonthlyExpenses.ToString("C")</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
             <div class="flex items-center">
-                <div class="p-2 @(Model.NetIncome >= 0 ? "bg-green-100" : "bg-red-100") rounded-lg">
-                    <svg class="w-6 h-6 @(Model.NetIncome >= 0 ? "text-green-600" : "text-red-600")" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 @(Model.NetIncome >= 0 ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30") rounded-lg">
+                    <svg class="w-6 h-6 @(Model.NetIncome >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Net Income</p>
-                    <p class="text-2xl font-bold @(Model.NetIncome >= 0 ? "text-green-600" : "text-red-600")">@Model.NetIncome.ToString("C")</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Net Income</p>
+                    <p class="text-2xl font-bold @(Model.NetIncome >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">@Model.NetIncome.ToString("C")</p>
                 </div>
             </div>
         </div>
@@ -71,10 +71,10 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Accounts Overview -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-900">Your Accounts</h2>
-                <a asp-controller="Accounts" asp-action="Create" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Your Accounts</h2>
+                <a asp-controller="Accounts" asp-action="Create" class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200">
                     Add Account
                 </a>
             </div>
@@ -83,19 +83,19 @@
                 <div class="space-y-3">
                     @foreach (var account in Model.Accounts)
                     {
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <div>
-                                <h3 class="font-medium text-gray-900">@account.Name</h3>
-                                <p class="text-sm text-gray-600">@account.Type</p>
+                                <h3 class="font-medium text-gray-900 dark:text-white">@account.Name</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">@account.Type</p>
                             </div>
-                            <span class="text-lg font-semibold @(account.Balance >= 0 ? "text-green-600" : "text-red-600")">
+                            <span class="text-lg font-semibold @(account.Balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
                                 @account.Balance.ToString("C")
                             </span>
                         </div>
                     }
                 </div>
                 <div class="mt-4">
-                    <a asp-controller="Accounts" asp-action="Index" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <a asp-controller="Accounts" asp-action="Index" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">
                         View all accounts →
                     </a>
                 </div>
@@ -103,20 +103,20 @@
             else
             {
                 <div class="text-center py-8">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No accounts</h3>
-                    <p class="mt-1 text-sm text-gray-500">Get started by creating your first account.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No accounts</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first account.</p>
                 </div>
             }
         </div>
 
         <!-- Recent Transactions -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-900">Recent Transactions</h2>
-                <a asp-controller="Transactions" asp-action="Create" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
+                <a asp-controller="Transactions" asp-action="Create" class="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200">
                     Add Transaction
                 </a>
             </div>
@@ -125,20 +125,20 @@
                 <div class="space-y-3">
                     @foreach (var transaction in Model.RecentTransactions.Take(5))
                     {
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <div class="flex-1">
-                                <h3 class="font-medium text-gray-900">@transaction.Description</h3>
-                                <p class="text-sm text-gray-600">@transaction.CategoryName • @transaction.AccountName</p>
-                                <p class="text-xs text-gray-500">@transaction.Date.ToString("MMM dd, yyyy")</p>
+                                <h3 class="font-medium text-gray-900 dark:text-white">@transaction.Description</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">@transaction.CategoryName • @transaction.AccountName</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">@transaction.Date.ToString("MMM dd, yyyy")</p>
                             </div>
-                            <span class="text-lg font-semibold @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "text-green-600" : "text-red-600")">
+                            <span class="text-lg font-semibold @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
                                 @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "+" : "-")@transaction.Amount.ToString("C")
                             </span>
                         </div>
                     }
                 </div>
                 <div class="mt-4">
-                    <a asp-controller="Transactions" asp-action="Index" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <a asp-controller="Transactions" asp-action="Index" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">
                         View all transactions →
                     </a>
                 </div>
@@ -146,11 +146,11 @@
             else
             {
                 <div class="text-center py-8">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No transactions</h3>
-                    <p class="mt-1 text-sm text-gray-500">Start tracking your finances by adding transactions.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No transactions</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Start tracking your finances by adding transactions.</p>
                 </div>
             }
         </div>
@@ -159,19 +159,19 @@
     <!-- Category Spending -->
     @if (Model.CategorySpending.Any())
     {
-        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Top Spending Categories This Month</h2>
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Top Spending Categories This Month</h2>
             <div class="space-y-4">
                 @foreach (var category in Model.CategorySpending)
                 {
                     <div class="flex items-center">
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-gray-900">@category.CategoryName</span>
-                                <span class="text-sm text-gray-600">@category.Amount.ToString("C")</span>
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">@category.CategoryName</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300">@category.Amount.ToString("C")</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: @(category.Percentage)%"></div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: @(category.Percentage)%"></div>
                             </div>
                         </div>
                     </div>

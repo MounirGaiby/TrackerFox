@@ -6,7 +6,7 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-        <a href="@Url.Action("Index", "Markets")" class="text-indigo-600 hover:text-indigo-900 flex items-center">
+        <a href="@Url.Action("Index", "Markets")" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 flex items-center">
             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -14,21 +14,21 @@
         </a>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg mb-8">
         <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                     @Model.Name (@Model.Symbol)
                 </h2>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
                     Commodity
                 </p>
             </div>
             <div class="text-right">
-                <div class="text-3xl font-bold @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                <div class="text-3xl font-bold @(Model.Change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
                     $@Model.CurrentPrice.ToString("N2") / @Model.Unit
                 </div>
-                <div class="flex items-center justify-end @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                <div class="flex items-center justify-end @(Model.Change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
                     @if (Model.Change >= 0)
                     {
                         <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -45,69 +45,69 @@
                 </div>
             </div>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <dl class="sm:divide-y sm:divide-gray-200">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200 dark:sm:divide-gray-700">
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Open</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.Open.ToString("N2")</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Open</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">$@Model.Open.ToString("N2")</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">High</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.High.ToString("N2")</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">High</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">$@Model.High.ToString("N2")</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Low</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.Low.ToString("N2")</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Low</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">$@Model.Low.ToString("N2")</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Previous Close</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.PreviousClose.ToString("N2")</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Previous Close</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">$@Model.PreviousClose.ToString("N2")</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Volume</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@Model.Volume.ToString("N0")</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Volume</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">@Model.Volume.ToString("N0")</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Unit</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@Model.Unit</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unit</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">@Model.Unit</dd>
                 </div>
             </dl>
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg mb-8">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
                 Price History
             </h3>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
             <div class="flex justify-end mb-4">
                 <div class="inline-flex shadow-sm rounded-md">
-                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="7">1W</button>
-                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="30">1M</button>
-                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="90">3M</button>
-                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="180">6M</button>
-                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 active" data-interval="365">1Y</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="7">1W</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="30">1M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="90">3M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="180">6M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 active" data-interval="365">1Y</button>
                 </div>
             </div>
             <canvas id="commodityChart" class="w-full" height="400"></canvas>
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
                 About @Model.Name
             </h3>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
-            <p class="text-base text-gray-700 mb-4">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+            <p class="text-base text-gray-700 dark:text-gray-300 mb-4">
                 @GetCommodityDescription(Model.Symbol)
             </p>
-            <div class="border-t border-gray-200 pt-4 mt-4">
-                <h4 class="text-md font-medium text-gray-900 mb-2">Market Factors</h4>
-                <ul class="list-disc pl-5 text-sm text-gray-700">
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                <h4 class="text-md font-medium text-gray-900 dark:text-white mb-2">Market Factors</h4>
+                <ul class="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300">
                     @foreach (var factor in GetMarketFactors(Model.Symbol))
                     {
                         <li class="mb-1">@factor</li>
@@ -189,11 +189,11 @@
                 
                 // Update active button
                 document.querySelectorAll('.interval-btn').forEach(btn => {
-                    btn.classList.remove('active', 'bg-indigo-50', 'text-indigo-700');
-                    btn.classList.add('bg-white', 'text-gray-700');
+                    btn.classList.remove('active', 'bg-indigo-50', 'dark:bg-indigo-900/30', 'text-indigo-700', 'dark:text-indigo-300');
+                    btn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
                 });
-                this.classList.add('active', 'bg-indigo-50', 'text-indigo-700');
-                this.classList.remove('bg-white', 'text-gray-700');
+                this.classList.add('active', 'bg-indigo-50', 'dark:bg-indigo-900/30', 'text-indigo-700', 'dark:text-indigo-300');
+                this.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
                 
                 // Filter data based on interval
                 const filteredData = historicalData.slice(-interval);

@@ -12,15 +12,18 @@ namespace PersonalFinanceTracker.Controllers
     public class SettingsController : Controller
     {
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<SettingsController> _logger;
 
         public SettingsController(
             UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ApplicationDbContext context,
             ILogger<SettingsController> logger)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;
             _logger = logger;
         }
@@ -34,31 +37,10 @@ namespace PersonalFinanceTracker.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            ViewBag.Theme = user.Theme;
             ViewBag.Country = user.Country;
             ViewBag.Currency = user.Currency;
 
             return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateTheme(string theme)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, message = "User not found" });
-            }
-
-            if (new[] { "light", "dark", "system" }.Contains(theme))
-            {
-                user.Theme = theme;
-                await _userManager.UpdateAsync(user);
-                return Json(new { success = true, theme = theme });
-            }
-
-            return Json(new { success = false, message = "Invalid theme" });
         }
 
         [HttpPost]
@@ -230,6 +212,11 @@ namespace PersonalFinanceTracker.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User account {Email} was deleted successfully", user.Email);
+                    
+                    // Sign out the user after successful account deletion
+                    await _signInManager.SignOutAsync();
+                    _logger.LogInformation("User {Email} signed out after account deletion", user.Email);
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 else

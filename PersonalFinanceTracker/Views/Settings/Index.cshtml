@@ -10,14 +10,14 @@
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+        <div class="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg">
             @TempData["SuccessMessage"]
         </div>
     }
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div class="mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
             @TempData["ErrorMessage"]
         </div>
     }
@@ -99,59 +99,6 @@
                     </div>
                 </dl>
             </form>
-        </div>
-    </div>
-
-    <!-- Appearance Section -->
-    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-8">
-        <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Appearance</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Customize the look and feel of your application</p>
-        </div>
-        <div class="border-t border-gray-200 dark:border-gray-700">
-            <dl>
-                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme</dt>
-                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-                        <div class="space-y-3">
-                            <div class="flex items-center">
-                                <input id="theme-light" name="theme" type="radio" value="light" onchange="setTheme('light')" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600">
-                                <label for="theme-light" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    <span class="flex items-center">
-                                        <svg class="h-4 w-4 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                                        </svg>
-                                        Light
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="theme-dark" name="theme" type="radio" value="dark" onchange="setTheme('dark')" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600">
-                                <label for="theme-dark" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    <span class="flex items-center">
-                                        <svg class="h-4 w-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                        </svg>
-                                        Dark
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="theme-system" name="theme" type="radio" value="system" onchange="setTheme('system')" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600">
-                                <label for="theme-system" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    <span class="flex items-center">
-                                        <svg class="h-4 w-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                        System
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Choose your preferred color scheme. System will match your device's appearance settings.</p>
-                    </dd>
-                </div>
-            </dl>
         </div>
     </div>
 
@@ -252,19 +199,5 @@
         if (e.target === this) {
             hideDeleteModal();
         }
-    });
-
-    // Theme functionality for Settings page
-    function updateThemeRadios() {
-        const currentTheme = localStorage.getItem('theme') || 'system';
-        
-        document.getElementById('theme-light').checked = (currentTheme === 'light');
-        document.getElementById('theme-dark').checked = (currentTheme === 'dark');
-        document.getElementById('theme-system').checked = (currentTheme === 'system');
-    }
-    
-    // Initialize theme radio buttons on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        updateThemeRadios();
     });
 </script>

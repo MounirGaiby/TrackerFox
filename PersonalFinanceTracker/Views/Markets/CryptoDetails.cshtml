@@ -7,24 +7,24 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 animate-fade-in">
         <div class="flex items-center">
-            <a asp-controller="Markets" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+            <a asp-controller="Markets" asp-action="Index" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                 </svg>
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">@Model.Name (@Model.Symbol)</h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">@Model.Name (@Model.Symbol)</h1>
         </div>
     </div>
 
     <!-- Crypto Overview -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <!-- Price and Change -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in">
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
                 <h2 class="text-lg font-medium text-white">Current Price</h2>
             </div>
             <div class="p-6 text-center">
-                <div class="text-4xl font-bold text-gray-900 mb-2">$@Model.CurrentPrice.ToString("N2")</div>
+                <div class="text-4xl font-bold text-gray-900 dark:text-white mb-2">$@Model.CurrentPrice.ToString("N2")</div>
                 <div class="flex justify-center items-center space-x-2">
                     <span class="text-lg font-medium @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
                         @(Model.Change >= 0 ? "+" : "")$@Model.Change.ToString("N2")
@@ -33,52 +33,52 @@
                         (@(Model.PercentChange >= 0 ? "+" : "")@Model.PercentChange.ToString("N2")%)
                     </span>
                 </div>
-                <div class="text-sm text-gray-500 mt-2">Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400 mt-2">Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")</div>
             </div>
         </div>
 
         <!-- Market Data -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in">
             <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
                 <h2 class="text-lg font-medium text-white">Market Data</h2>
             </div>
             <div class="p-4">
                 <div class="grid grid-cols-1 gap-4">
-                    <div class="border-b border-gray-200 pb-2">
-                        <div class="text-xs text-gray-500">Market Cap</div>
-                        <div class="text-sm font-medium text-gray-900">$@(Model.MarketCap / 1000000000).ToString("N2") B</div>
+                    <div class="border-b border-gray-200 dark:border-gray-600 pb-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Market Cap</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">$@(Model.MarketCap / 1000000000).ToString("N2") B</div>
                     </div>
-                    <div class="border-b border-gray-200 pb-2">
-                        <div class="text-xs text-gray-500">24h Volume</div>
-                        <div class="text-sm font-medium text-gray-900">$@(Model.Volume24h / 1000000000).ToString("N2") B</div>
+                    <div class="border-b border-gray-200 dark:border-gray-600 pb-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">24h Volume</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">$@(Model.Volume24h / 1000000000).ToString("N2") B</div>
                     </div>
                     <div class="pt-2">
-                        <div class="text-xs text-gray-500">All-Time High</div>
-                        <div class="text-sm font-medium text-gray-900">$@Model.AllTimeHigh.ToString("N2") (@Model.AllTimeHighDate.ToString("MMM d, yyyy"))</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">All-Time High</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">$@Model.AllTimeHigh.ToString("N2") (@Model.AllTimeHighDate.ToString("MMM d, yyyy"))</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Supply Info -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in">
             <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
                 <h2 class="text-lg font-medium text-white">Supply Information</h2>
             </div>
             <div class="p-4">
                 <div class="grid grid-cols-1 gap-4">
-                    <div class="border-b border-gray-200 pb-2">
-                        <div class="text-xs text-gray-500">Circulating Supply</div>
-                        <div class="text-sm font-medium text-gray-900">@Model.CirculatingSupply.ToString("N0") @Model.Symbol</div>
+                    <div class="border-b border-gray-200 dark:border-gray-600 pb-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Circulating Supply</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">@Model.CirculatingSupply.ToString("N0") @Model.Symbol</div>
                     </div>
-                    <div class="border-b border-gray-200 pb-2">
-                        <div class="text-xs text-gray-500">Total Supply</div>
-                        <div class="text-sm font-medium text-gray-900">@Model.TotalSupply.ToString("N0") @Model.Symbol</div>
+                    <div class="border-b border-gray-200 dark:border-gray-600 pb-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Total Supply</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">@Model.TotalSupply.ToString("N0") @Model.Symbol</div>
                     </div>
                     <div class="pt-2">
-                        <div class="text-xs text-gray-500">Percent of Total Supply in Circulation</div>
-                        <div class="text-sm font-medium text-gray-900">@(((Model.CirculatingSupply / Model.TotalSupply) * 100).ToString("N2"))%</div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Percent of Total Supply in Circulation</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">@(((Model.CirculatingSupply / Model.TotalSupply) * 100).ToString("N2"))%</div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-2">
                             <div class="bg-indigo-600 h-2.5 rounded-full" style="width: @(((Model.CirculatingSupply / Model.TotalSupply) * 100).ToString("N2"))%"></div>
                         </div>
                     </div>
@@ -88,16 +88,16 @@
     </div>
 
     <!-- Price Chart -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8 animate-fade-in">
         <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
             <h2 class="text-lg font-medium text-white">Price History</h2>
         </div>
         <div class="p-4">
             <div class="flex justify-end space-x-2 mb-4">
-                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="7">7D</button>
-                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="30">30D</button>
+                <button type="button" class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded chart-range" data-range="7">7D</button>
+                <button type="button" class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded chart-range" data-range="30">30D</button>
                 <button type="button" class="text-xs bg-indigo-600 text-white px-2 py-1 rounded chart-range active" data-range="90">90D</button>
-                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="365">1Y</button>
+                <button type="button" class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded chart-range" data-range="365">1Y</button>
             </div>
             <div class="w-full h-96" id="priceChart">
                 <canvas id="cryptoChart"></canvas>
