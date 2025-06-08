@@ -87,3 +87,6 @@ artifacts/
 
 # Local development settings
 appsettings.Development.json
+
+# LibMan managed libraries
+wwwroot/lib/
