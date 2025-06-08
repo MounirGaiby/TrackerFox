@@ -1,0 +1,270 @@
+@{
+    ViewData["Title"] = "Financial Predictions";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center">
+            <a asp-controller="Analytics" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">Financial Predictions</h1>
+        </div>
+        <p class="mt-2 text-gray-600">AI-powered projections based on your spending patterns</p>
+    </div>
+
+    <!-- Prediction Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Category Averages -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Average Monthly Spending by Category</h2>
+            </div>
+            <div class="p-4">
+                <div class="w-full h-96" id="categoryAveragesChart">
+                    <canvas id="averagesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projected Expenses -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Projected Expenses (Next 3 Months)</h2>
+            </div>
+            <div class="p-4">
+                <div class="w-full h-96" id="projectedExpensesChart">
+                    <canvas id="expensesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Health Indicators -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Financial Health Indicators</h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @{
+                    // These would ideally be calculated from real data
+                    var savingsRate = 18.5m;
+                    var debtToIncome = 28.7m;
+                    var emergencyFundMonths = 3.2m;
+                    
+                    // Determine status colors based on values
+                    var savingsRateColor = savingsRate >= 20 ? "green" : (savingsRate >= 10 ? "yellow" : "red");
+                    var debtToIncomeColor = debtToIncome <= 36 ? "green" : (debtToIncome <= 43 ? "yellow" : "red");
+                    var emergencyFundColor = emergencyFundMonths >= 6 ? "green" : (emergencyFundMonths >= 3 ? "yellow" : "red");
+                }
+
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Savings Rate</h3>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-2xl font-bold @(savingsRateColor == "green" ? "text-green-600" : (savingsRateColor == "yellow" ? "text-yellow-600" : "text-red-600"))">
+                            @savingsRate.ToString("N1")%
+                        </div>
+                        <div class="bg-@(savingsRateColor)-100 text-@(savingsRateColor)-800 text-xs px-2 py-1 rounded-full">
+                            @(savingsRateColor == "green" ? "Good" : (savingsRateColor == "yellow" ? "Fair" : "Needs Improvement"))
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        @(savingsRateColor == "green" ? "Excellent savings rate! You're saving more than the recommended 15-20% of income." : 
+                          (savingsRateColor == "yellow" ? "Decent savings rate. Try to increase to 20% for better long-term financial health." : 
+                           "Your savings rate is low. Aim to save at least 10-15% of your income."))
+                    </p>
+                </div>
+
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Debt-to-Income Ratio</h3>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-2xl font-bold @(debtToIncomeColor == "green" ? "text-green-600" : (debtToIncomeColor == "yellow" ? "text-yellow-600" : "text-red-600"))">
+                            @debtToIncome.ToString("N1")%
+                        </div>
+                        <div class="bg-@(debtToIncomeColor)-100 text-@(debtToIncomeColor)-800 text-xs px-2 py-1 rounded-full">
+                            @(debtToIncomeColor == "green" ? "Good" : (debtToIncomeColor == "yellow" ? "Fair" : "High"))
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        @(debtToIncomeColor == "green" ? "Your debt-to-income ratio is healthy, which is good for your credit score and overall financial health." : 
+                          (debtToIncomeColor == "yellow" ? "Your debt-to-income ratio is acceptable but could be improved to increase financial flexibility." : 
+                           "Your debt-to-income ratio is high. Consider strategies to reduce debt or increase income."))
+                    </p>
+                </div>
+
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Emergency Fund</h3>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-2xl font-bold @(emergencyFundColor == "green" ? "text-green-600" : (emergencyFundColor == "yellow" ? "text-yellow-600" : "text-red-600"))">
+                            @emergencyFundMonths.ToString("N1") months
+                        </div>
+                        <div class="bg-@(emergencyFundColor)-100 text-@(emergencyFundColor)-800 text-xs px-2 py-1 rounded-full">
+                            @(emergencyFundColor == "green" ? "Strong" : (emergencyFundColor == "yellow" ? "Adequate" : "Low"))
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        @(emergencyFundColor == "green" ? "Your emergency fund is well-established. This provides excellent financial security." : 
+                          (emergencyFundColor == "yellow" ? "Your emergency fund covers the minimum recommended 3 months. Consider building it to 6 months." : 
+                           "Your emergency fund is below recommendations. Try to build it to cover at least 3-6 months of expenses."))
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Recommendations -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">AI-Powered Recommendations</h2>
+        </div>
+        <div class="p-6">
+            <div class="space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Optimize Dining Expenses</h3>
+                        <p class="text-gray-600 mt-1">Your dining expenses are 25% higher than average. Consider cooking at home more often or using meal planning to reduce costs. This could save approximately $245 per month.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Increase Retirement Contributions</h3>
+                        <p class="text-gray-600 mt-1">Based on your current savings rate and income, you could benefit from increasing your retirement contributions by 3%. This small change could result in approximately $120,000 more in retirement savings over 30 years.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Consolidate Subscription Services</h3>
+                        <p class="text-gray-600 mt-1">You're currently spending $78 monthly on various streaming and subscription services. Consider consolidating or sharing subscription plans to reduce this by approximately 40%.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryAverages = @Html.Raw(ViewBag.CategoryAveragesJson);
+            const projectedExpenses = @Html.Raw(ViewBag.ProjectedExpensesJson);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Chart colors
+            const chartColors = [
+                'rgba(99, 102, 241, 0.8)',    // Indigo
+                'rgba(139, 92, 246, 0.8)',    // Purple
+                'rgba(216, 180, 254, 0.8)',   // Light Purple
+                'rgba(251, 113, 133, 0.8)',   // Pink
+                'rgba(14, 165, 233, 0.8)',    // Sky Blue
+                'rgba(34, 211, 238, 0.8)',    // Cyan
+                'rgba(16, 185, 129, 0.8)',    // Green
+                'rgba(250, 204, 21, 0.8)',    // Yellow
+                'rgba(249, 115, 22, 0.8)',    // Orange
+                'rgba(239, 68, 68, 0.8)',     // Red
+            ];
+            
+            // Category Averages Chart
+            const avgCtx = document.getElementById('averagesChart').getContext('2d');
+            new Chart(avgCtx, {
+                type: 'bar',
+                data: {
+                    labels: categoryAverages.map(item => item.category),
+                    datasets: [{
+                        label: 'Average Monthly Spending',
+                        data: categoryAverages.map(item => item.averageMonthly),
+                        backgroundColor: chartColors.slice(0, categoryAverages.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Projected Expenses Chart
+            const expCtx = document.getElementById('expensesChart').getContext('2d');
+            new Chart(expCtx, {
+                type: 'bar',
+                data: {
+                    labels: projectedExpenses.map(item => months[item.month - 1] + ' ' + item.year),
+                    datasets: [{
+                        label: 'Projected Expenses',
+                        data: projectedExpenses.map(item => item.expenses),
+                        backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Projected: $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

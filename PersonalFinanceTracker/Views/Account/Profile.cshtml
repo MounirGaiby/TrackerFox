@@ -1,0 +1,162 @@
+@model PersonalFinanceTracker.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Your Profile";
+}
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <h1 class="text-3xl font-bold text-gray-900">Your Profile</h1>
+        <p class="mt-2 text-gray-600">Manage your personal information and settings</p>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Personal Information</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Update your basic information and email preferences</p>
+        </div>
+        <div class="border-t border-gray-200">
+            <form asp-controller="Account" asp-action="UpdateProfile" method="post">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Full name</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <input type="text" name="FullName" value="@Model.FullName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <input type="email" name="Email" value="@Model.Email" readonly class="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-md shadow-sm" />
+                            <p class="mt-1 text-xs text-gray-500">Your email address cannot be changed</p>
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Country</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <select name="Country" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                @{
+                                    var countries = new[] {
+                                        new { Value = "Morocco", Text = "Morocco" },
+                                        new { Value = "United States", Text = "United States" },
+                                        new { Value = "Canada", Text = "Canada" },
+                                        new { Value = "United Kingdom", Text = "United Kingdom" },
+                                        new { Value = "France", Text = "France" },
+                                        new { Value = "Germany", Text = "Germany" },
+                                        new { Value = "Spain", Text = "Spain" },
+                                        new { Value = "Italy", Text = "Italy" },
+                                        new { Value = "Japan", Text = "Japan" },
+                                        new { Value = "Australia", Text = "Australia" }
+                                    };
+                                }
+                                @foreach (var country in countries)
+                                {
+                                    if (Model.Country == country.Value)
+                                    {
+                                        <option value="@country.Value" selected>@country.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@country.Value">@country.Text</option>
+                                    }
+                                }
+                            </select>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Currency</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <select name="Currency" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                @{
+                                    var currencies = new[] {
+                                        new { Value = "MAD", Text = "MAD - Moroccan Dirham" },
+                                        new { Value = "USD", Text = "USD - US Dollar" },
+                                        new { Value = "EUR", Text = "EUR - Euro" },
+                                        new { Value = "GBP", Text = "GBP - British Pound" },
+                                        new { Value = "CAD", Text = "CAD - Canadian Dollar" },
+                                        new { Value = "JPY", Text = "JPY - Japanese Yen" },
+                                        new { Value = "AUD", Text = "AUD - Australian Dollar" }
+                                    };
+                                }
+                                @foreach (var currency in currencies)
+                                {
+                                    if (Model.Currency == currency.Value)
+                                    {
+                                        <option value="@currency.Value" selected>@currency.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@currency.Value">@currency.Text</option>
+                                    }
+                                }
+                            </select>
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Password</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <a asp-controller="Account" asp-action="ChangePassword" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Change password
+                            </a>
+                        </dd>
+                    </div>
+                    @* <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Notification preferences</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="emailNotifications" name="EmailNotifications" type="checkbox" checked class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="emailNotifications" class="font-medium text-gray-700">Email notifications</label>
+                                        <p class="text-gray-500">Receive email notifications about account activity and updates</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="marketAlerts" name="MarketAlerts" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="marketAlerts" class="font-medium text-gray-700">Market alerts</label>
+                                        <p class="text-gray-500">Receive alerts about significant market movements</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="weeklyReport" name="WeeklyReport" type="checkbox" checked class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="weeklyReport" class="font-medium text-gray-700">Weekly financial report</label>
+                                        <p class="text-gray-500">Receive a weekly summary of your financial activity</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
+                    </div> *@
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500"></dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Save changes
+                            </button>
+                        </dd>
+                    </div>
+                </dl>
+            </form>
+        </div>
+    </div>
+</div>

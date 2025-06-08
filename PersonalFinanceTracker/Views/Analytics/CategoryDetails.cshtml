@@ -1,0 +1,190 @@
+@model IEnumerable<PersonalFinanceTracker.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Category Details";
+    var category = ViewBag.Category;
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center">
+            <a asp-controller="Analytics" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">Category: @category.Name</h1>
+        </div>
+        <p class="mt-2 text-gray-600">@category.Description</p>
+    </div>
+
+    <!-- Category Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Total Spending</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@Model.Where(t => t.Type == PersonalFinanceTracker.Models.TransactionType.Expense).Sum(t => t.Amount).ToString("N2")</div>
+                <div class="text-sm text-gray-500">From @Model.Count() transactions</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Average Transaction</h2>
+            </div>
+            <div class="p-6 text-center">
+                @{
+                    var avgAmount = Model.Any() ? Model.Average(t => t.Amount) : 0;
+                }
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@avgAmount.ToString("N2")</div>
+                <div class="text-sm text-gray-500">Per transaction</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Monthly Average</h2>
+            </div>
+            <div class="p-6 text-center">
+                @{
+                    var totalMonths = Model.Any() 
+                        ? (Model.Max(t => t.Date).Year * 12 + Model.Max(t => t.Date).Month) - 
+                          (Model.Min(t => t.Date).Year * 12 + Model.Min(t => t.Date).Month) + 1
+                        : 1;
+                    var monthlyAvg = Model.Any() ? Model.Sum(t => t.Amount) / totalMonths : 0;
+                }
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@monthlyAvg.ToString("N2")</div>
+                <div class="text-sm text-gray-500">Per month on average</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Trend -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Monthly Spending Trend</h2>
+        </div>
+        <div class="p-4">
+            <div class="w-full h-96" id="categoryTrendChart">
+                <canvas id="monthlyTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Transactions</h2>
+        </div>
+        <div class="p-4">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account</th>
+                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var transaction in Model.OrderByDescending(t => t.Date))
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
+                                    @transaction.Date.ToString("MMM dd, yyyy")
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900">
+                                    @transaction.Description
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900">
+                                    @transaction.Account.Name
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap text-sm text-right @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "text-green-600" : "text-red-600")">
+                                    @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "+" : "-")$@transaction.Amount.ToString("N2")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get transaction data and group by month
+            const transactions = @Html.Raw(Json.Serialize(Model));
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Group transactions by year and month
+            const monthlyData = {};
+            
+            transactions.forEach(transaction => {
+                const date = new Date(transaction.date);
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const key = `${year}-${month}`;
+                
+                if (!monthlyData[key]) {
+                    monthlyData[key] = {
+                        yearMonth: `${months[month]} ${year}`,
+                        amount: 0
+                    };
+                }
+                
+                monthlyData[key].amount += transaction.amount;
+            });
+            
+            // Convert to array and sort by date
+            const monthlyAmounts = Object.values(monthlyData).sort((a, b) => {
+                return new Date(a.yearMonth) - new Date(b.yearMonth);
+            });
+            
+            // Create chart
+            const ctx = document.getElementById('monthlyTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyAmounts.map(item => item.yearMonth),
+                    datasets: [{
+                        label: 'Amount',
+                        data: monthlyAmounts.map(item => item.amount),
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

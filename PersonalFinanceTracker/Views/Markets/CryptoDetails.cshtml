@@ -1,0 +1,336 @@
+@model PersonalFinanceTracker.ViewModels.CryptoDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Symbol} - Cryptocurrency Details";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center">
+            <a asp-controller="Markets" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">@Model.Name (@Model.Symbol)</h1>
+        </div>
+    </div>
+
+    <!-- Crypto Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Price and Change -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Current Price</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@Model.CurrentPrice.ToString("N2")</div>
+                <div class="flex justify-center items-center space-x-2">
+                    <span class="text-lg font-medium @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                        @(Model.Change >= 0 ? "+" : "")$@Model.Change.ToString("N2")
+                    </span>
+                    <span class="text-lg font-medium @(Model.PercentChange >= 0 ? "text-green-600" : "text-red-600")">
+                        (@(Model.PercentChange >= 0 ? "+" : "")@Model.PercentChange.ToString("N2")%)
+                    </span>
+                </div>
+                <div class="text-sm text-gray-500 mt-2">Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")</div>
+            </div>
+        </div>
+
+        <!-- Market Data -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Market Data</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">Market Cap</div>
+                        <div class="text-sm font-medium text-gray-900">$@(Model.MarketCap / 1000000000).ToString("N2") B</div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">24h Volume</div>
+                        <div class="text-sm font-medium text-gray-900">$@(Model.Volume24h / 1000000000).ToString("N2") B</div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="text-xs text-gray-500">All-Time High</div>
+                        <div class="text-sm font-medium text-gray-900">$@Model.AllTimeHigh.ToString("N2") (@Model.AllTimeHighDate.ToString("MMM d, yyyy"))</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supply Info -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Supply Information</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">Circulating Supply</div>
+                        <div class="text-sm font-medium text-gray-900">@Model.CirculatingSupply.ToString("N0") @Model.Symbol</div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">Total Supply</div>
+                        <div class="text-sm font-medium text-gray-900">@Model.TotalSupply.ToString("N0") @Model.Symbol</div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="text-xs text-gray-500">Percent of Total Supply in Circulation</div>
+                        <div class="text-sm font-medium text-gray-900">@(((Model.CirculatingSupply / Model.TotalSupply) * 100).ToString("N2"))%</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                            <div class="bg-indigo-600 h-2.5 rounded-full" style="width: @(((Model.CirculatingSupply / Model.TotalSupply) * 100).ToString("N2"))%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Chart -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Price History</h2>
+        </div>
+        <div class="p-4">
+            <div class="flex justify-end space-x-2 mb-4">
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="7">7D</button>
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="30">30D</button>
+                <button type="button" class="text-xs bg-indigo-600 text-white px-2 py-1 rounded chart-range active" data-range="90">90D</button>
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="365">1Y</button>
+            </div>
+            <div class="w-full h-96" id="priceChart">
+                <canvas id="cryptoChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Analysis -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Current vs ATH -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-yellow-500 to-orange-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Current Price vs. All-Time High</h2>
+            </div>
+            <div class="p-4">
+                <div class="relative pt-6 pb-2">
+                    <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                        <div>$0</div>
+                        <div>ATH: $@Model.AllTimeHigh.ToString("N2")</div>
+                    </div>
+                    <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                        <div style="width:@(((Model.CurrentPrice) / (Model.AllTimeHigh)) * 100)%" 
+                             class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500">
+                        </div>
+                    </div>
+                    <div class="absolute" style="left:@(((Model.CurrentPrice) / (Model.AllTimeHigh)) * 100)%; top:0; transform: translateX(-50%)">
+                        <div class="text-xs text-indigo-800 bg-indigo-100 rounded px-1 py-0.5">Current</div>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    @{
+                        var percentFromATH = ((Model.AllTimeHigh - Model.CurrentPrice) / Model.AllTimeHigh) * 100;
+                    }
+                    @if (percentFromATH > 0)
+                    {
+                        <p>Current price is <span class="font-semibold text-red-600">@percentFromATH.ToString("N2")%</span> below all-time high.</p>
+                    }
+                    else
+                    {
+                        <p>Current price is at <span class="font-semibold text-green-600">all-time high</span>!</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Sentiment -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Market Sentiment</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    @{
+                        var sentiment = "Neutral";
+                        var sentimentColor = "text-yellow-600";
+                        var sentimentDesc = "The market is currently undecided about the future direction.";
+                        
+                        if (Model.PercentChange > 5)
+                        {
+                            sentiment = "Strongly Bullish";
+                            sentimentColor = "text-green-600";
+                            sentimentDesc = "Significant positive momentum in the last 24 hours.";
+                        }
+                        else if (Model.PercentChange > 2)
+                        {
+                            sentiment = "Bullish";
+                            sentimentColor = "text-green-500";
+                            sentimentDesc = "Positive momentum in the last 24 hours.";
+                        }
+                        else if (Model.PercentChange < -5)
+                        {
+                            sentiment = "Strongly Bearish";
+                            sentimentColor = "text-red-600";
+                            sentimentDesc = "Significant negative momentum in the last 24 hours.";
+                        }
+                        else if (Model.PercentChange < -2)
+                        {
+                            sentiment = "Bearish";
+                            sentimentColor = "text-red-500";
+                            sentimentDesc = "Negative momentum in the last 24 hours.";
+                        }
+                        
+                        var volatilityIndex = Math.Abs(Model.PercentChange) * 10;
+                        var volatility = "Medium";
+                        var volatilityColor = "text-yellow-600";
+                        
+                        if (volatilityIndex > 50)
+                        {
+                            volatility = "Very High";
+                            volatilityColor = "text-red-600";
+                        }
+                        else if (volatilityIndex > 30)
+                        {
+                            volatility = "High";
+                            volatilityColor = "text-orange-600";
+                        }
+                        else if (volatilityIndex < 10)
+                        {
+                            volatility = "Low";
+                            volatilityColor = "text-green-600";
+                        }
+                    }
+                    
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">24h Sentiment</div>
+                        <div class="text-lg font-medium @sentimentColor">@sentiment</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            @sentimentDesc
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Volatility</div>
+                        <div class="text-lg font-medium @volatilityColor">@volatility</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            Based on recent price movements
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const historicalData = @Html.Raw(ViewBag.HistoricalDataJson);
+            const ctx = document.getElementById('cryptoChart').getContext('2d');
+            
+            // Format dates for chart
+            const dates = historicalData.map(item => new Date(item.date));
+            const prices = historicalData.map(item => item.close);
+            
+            // Create the chart
+            const cryptoChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: '@Model.Symbol Price',
+                        data: prices,
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                tooltipFormat: 'MMM d, yyyy'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Handle range buttons
+            const rangeButtons = document.querySelectorAll('.chart-range');
+            rangeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const days = parseInt(this.dataset.range);
+                    
+                    // Update active button
+                    rangeButtons.forEach(btn => {
+                        btn.classList.remove('bg-indigo-600', 'text-white');
+                        btn.classList.add('bg-indigo-100', 'text-indigo-800');
+                    });
+                    this.classList.remove('bg-indigo-100', 'text-indigo-800');
+                    this.classList.add('bg-indigo-600', 'text-white');
+                    
+                    // Filter data based on selected range
+                    const filteredDates = [];
+                    const filteredPrices = [];
+                    
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - days);
+                    
+                    for (let i = 0; i < historicalData.length; i++) {
+                        const date = new Date(historicalData[i].date);
+                        if (date >= cutoffDate) {
+                            filteredDates.push(date);
+                            filteredPrices.push(historicalData[i].close);
+                        }
+                    }
+                    
+                    // Update chart data
+                    cryptoChart.data.labels = filteredDates;
+                    cryptoChart.data.datasets[0].data = filteredPrices;
+                    cryptoChart.update();
+                });
+            });
+            
+            // Trigger 90-day view by default
+            document.querySelector('[data-range="90"]').click();
+        });
+    </script>
+}

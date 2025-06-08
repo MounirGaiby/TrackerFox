@@ -1,0 +1,279 @@
+@model IEnumerable<PersonalFinanceTracker.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Account Details";
+    var account = ViewBag.Account;
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center">
+            <a asp-controller="Analytics" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">Account: @account.Name</h1>
+        </div>
+        <p class="mt-2 text-gray-600">@account.Type.ToString() Account</p>
+    </div>
+
+    <!-- Account Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Current Balance</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@account.Balance.ToString("N2")</div>
+                <div class="text-sm text-gray-500">As of @DateTime.Now.ToString("MMMM dd, yyyy")</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Total Income</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">$@Model.Where(t => t.Type == PersonalFinanceTracker.Models.TransactionType.Income).Sum(t => t.Amount).ToString("N2")</div>
+                <div class="text-sm text-gray-500">From @Model.Where(t => t.Type == PersonalFinanceTracker.Models.TransactionType.Income).Count() transactions</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-red-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Total Expenses</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-red-600 mb-2">$@Model.Where(t => t.Type == PersonalFinanceTracker.Models.TransactionType.Expense).Sum(t => t.Amount).ToString("N2")</div>
+                <div class="text-sm text-gray-500">From @Model.Where(t => t.Type == PersonalFinanceTracker.Models.TransactionType.Expense).Count() transactions</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Balance History -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Balance History</h2>
+        </div>
+        <div class="p-4">
+            <div class="w-full h-96" id="balanceHistoryChart">
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Categories Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Income by Category</h2>
+            </div>
+            <div class="p-4">
+                <div class="w-full h-80" id="incomeCategoriesChart">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-yellow-500 to-orange-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Expenses by Category</h2>
+            </div>
+            <div class="p-4">
+                <div class="w-full h-80" id="expenseCategoriesChart">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Recent Transactions</h2>
+        </div>
+        <div class="p-4">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var transaction in Model.OrderByDescending(t => t.Date).Take(10))
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
+                                    @transaction.Date.ToString("MMM dd, yyyy")
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900">
+                                    @transaction.Description
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900">
+                                    @transaction.Category.Name
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap text-sm text-right @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "text-green-600" : "text-red-600")">
+                                    @(transaction.Type == PersonalFinanceTracker.Models.TransactionType.Income ? "+" : "-")$@transaction.Amount.ToString("N2")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.Count() > 10)
+                {
+                    <div class="mt-4 text-center">
+                        <a asp-controller="Transactions" asp-action="Index" asp-route-accountId="@account.Id" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                            View all @Model.Count() transactions
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const monthlyBalances = @Html.Raw(ViewBag.MonthlyBalancesJson);
+            const transactions = @Html.Raw(Json.Serialize(Model));
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Create colors for charts
+            const chartColors = [
+                'rgba(99, 102, 241, 0.8)',    // Indigo
+                'rgba(139, 92, 246, 0.8)',    // Purple
+                'rgba(216, 180, 254, 0.8)',   // Light Purple
+                'rgba(251, 113, 133, 0.8)',   // Pink
+                'rgba(14, 165, 233, 0.8)',    // Sky Blue
+                'rgba(34, 211, 238, 0.8)',    // Cyan
+                'rgba(16, 185, 129, 0.8)',    // Green
+                'rgba(250, 204, 21, 0.8)',    // Yellow
+                'rgba(249, 115, 22, 0.8)',    // Orange
+                'rgba(239, 68, 68, 0.8)',     // Red
+            ];
+            
+            // Balance History Chart
+            const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+            new Chart(balanceCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyBalances.map(item => months[item.month - 1]),
+                    datasets: [{
+                        label: 'Balance',
+                        data: monthlyBalances.map(item => item.balance),
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Balance: $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Process category data
+            const incomeCategories = {};
+            const expenseCategories = {};
+            
+            transactions.forEach(transaction => {
+                if (transaction.type === 0) { // Income
+                    if (!incomeCategories[transaction.category.name]) {
+                        incomeCategories[transaction.category.name] = 0;
+                    }
+                    incomeCategories[transaction.category.name] += transaction.amount;
+                } else { // Expense
+                    if (!expenseCategories[transaction.category.name]) {
+                        expenseCategories[transaction.category.name] = 0;
+                    }
+                    expenseCategories[transaction.category.name] += transaction.amount;
+                }
+            });
+            
+            // Income Categories Chart
+            const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+            new Chart(incomeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(incomeCategories),
+                    datasets: [{
+                        data: Object.values(incomeCategories),
+                        backgroundColor: chartColors.slice(0, Object.keys(incomeCategories).length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return `${context.label}: $${context.raw.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Expense Categories Chart
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(expenseCategories),
+                    datasets: [{
+                        data: Object.values(expenseCategories),
+                        backgroundColor: chartColors.slice(0, Object.keys(expenseCategories).length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return `${context.label}: $${context.raw.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

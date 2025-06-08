@@ -1,0 +1,297 @@
+@model PersonalFinanceTracker.ViewModels.CommodityDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Name} ({Model.Symbol}) - Commodity Details";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <a href="@Url.Action("Index", "Markets")" class="text-indigo-600 hover:text-indigo-900 flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Markets
+        </a>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                    @Model.Name (@Model.Symbol)
+                </h2>
+                <p class="text-sm text-gray-500">
+                    Commodity
+                </p>
+            </div>
+            <div class="text-right">
+                <div class="text-3xl font-bold @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                    $@Model.CurrentPrice.ToString("N2") / @Model.Unit
+                </div>
+                <div class="flex items-center justify-end @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                    @if (Model.Change >= 0)
+                    {
+                        <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    }
+                    <span>$@Model.Change.ToString("N2") (@Model.PercentChange.ToString("N2")%)</span>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Open</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.Open.ToString("N2")</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">High</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.High.ToString("N2")</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Low</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.Low.ToString("N2")</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Previous Close</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$@Model.PreviousClose.ToString("N2")</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Volume</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@Model.Volume.ToString("N0")</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Unit</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@Model.Unit</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Price History
+            </h3>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+            <div class="flex justify-end mb-4">
+                <div class="inline-flex shadow-sm rounded-md">
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="7">1W</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="30">1M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="90">3M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" data-interval="180">6M</button>
+                    <button type="button" class="interval-btn relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 active" data-interval="365">1Y</button>
+                </div>
+            </div>
+            <canvas id="commodityChart" class="w-full" height="400"></canvas>
+        </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                About @Model.Name
+            </h3>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+            <p class="text-base text-gray-700 mb-4">
+                @GetCommodityDescription(Model.Symbol)
+            </p>
+            <div class="border-t border-gray-200 pt-4 mt-4">
+                <h4 class="text-md font-medium text-gray-900 mb-2">Market Factors</h4>
+                <ul class="list-disc pl-5 text-sm text-gray-700">
+                    @foreach (var factor in GetMarketFactors(Model.Symbol))
+                    {
+                        <li class="mb-1">@factor</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get historical data from ViewBag
+        const historicalData = @Html.Raw(ViewBag.HistoricalDataJson);
+        let dates = [];
+        let prices = [];
+        
+        // Process all data initially
+        historicalData.forEach(item => {
+            dates.push(new Date(item.date).toLocaleDateString());
+            prices.push(item.close);
+        });
+        
+        // Create the chart
+        const ctx = document.getElementById('commodityChart');
+        const commodityChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '@Model.Name Price',
+                    data: prices,
+                    borderColor: 'rgba(99, 102, 241, 1)',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `Price: $${context.raw.toFixed(2)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Handle time interval buttons
+        document.querySelectorAll('.interval-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const interval = parseInt(this.getAttribute('data-interval'));
+                
+                // Update active button
+                document.querySelectorAll('.interval-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-indigo-50', 'text-indigo-700');
+                    btn.classList.add('bg-white', 'text-gray-700');
+                });
+                this.classList.add('active', 'bg-indigo-50', 'text-indigo-700');
+                this.classList.remove('bg-white', 'text-gray-700');
+                
+                // Filter data based on interval
+                const filteredData = historicalData.slice(-interval);
+                
+                // Update chart
+                commodityChart.data.labels = filteredData.map(item => new Date(item.date).toLocaleDateString());
+                commodityChart.data.datasets[0].data = filteredData.map(item => item.close);
+                commodityChart.update();
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetCommodityDescription(string symbol)
+    {
+        return symbol switch
+        {
+            "GC" => "Gold is a precious metal that has been used as a store of value for thousands of years. It's considered a safe-haven asset during economic uncertainty and is used in jewelry, electronics, and as a hedge against inflation. Gold is traded globally 24 hours a day, with major markets in London, New York, and Shanghai.",
+            "SI" => "Silver is a precious metal with both industrial and investment applications. It's used in electronics, solar panels, and medical devices, as well as jewelry and silverware. Silver typically has higher volatility than gold and is influenced by both industrial demand and investment sentiment.",
+            "CL" => "Crude oil is one of the world's most important energy sources and a critical commodity for the global economy. The price of oil is influenced by factors such as OPEC decisions, geopolitical events, economic growth, and inventory levels. WTI (West Texas Intermediate) crude oil futures are among the most actively traded commodity contracts.",
+            "NG" => "Natural gas is a fossil fuel primarily used for electricity generation, heating, and as a raw material in chemical manufacturing. Natural gas prices are seasonal, typically rising in winter in the Northern Hemisphere when heating demand increases. Prices are influenced by weather patterns, storage levels, and production rates.",
+            "HG" => "Copper is an industrial metal essential for construction, electronics, and transportation. Often called 'Dr. Copper' because its price is considered a reliable indicator of economic health, since it is used in so many industries. Copper demand is closely tied to economic growth, particularly in emerging markets like China.",
+            "C" => "Corn is one of the world's most important agricultural commodities, used for food, animal feed, and ethanol production. Corn prices are affected by weather conditions in key growing regions, global demand patterns, and government policies related to biofuels and trade.",
+            "W" => "Wheat is a staple grain used primarily for human consumption in products like bread, pasta, and cereals. It's grown in many regions globally, with major exporters including the United States, Russia, and Canada. Wheat prices are heavily influenced by weather conditions, global inventories, and export policies.",
+            "S" => "Soybeans are a major agricultural commodity used for animal feed, human consumption, and biodiesel production. Soybeans are rich in protein and oil, making them valuable for both food and industrial applications. Prices are influenced by growing conditions, international trade policies, and demand from major importers like China.",
+            _ => "This commodity is traded on global markets and its price is influenced by supply and demand factors, economic conditions, and market sentiment."
+        };
+    }
+    
+    public List<string> GetMarketFactors(string symbol)
+    {
+        return symbol switch
+        {
+            "GC" => new List<string> {
+                "Central bank policies and interest rates",
+                "Inflation expectations",
+                "Currency fluctuations, particularly the US dollar",
+                "Geopolitical tensions and uncertainty",
+                "Jewelry and industrial demand, especially from India and China"
+            },
+            "SI" => new List<string> {
+                "Industrial demand from electronics, solar panels, and medical applications",
+                "Investment demand for physical silver and ETFs",
+                "Gold/silver ratio trading",
+                "Mining production levels",
+                "Recycling rates"
+            },
+            "CL" => new List<string> {
+                "OPEC+ production decisions",
+                "US shale oil production",
+                "Global economic growth forecasts",
+                "Inventory levels reported by EIA and API",
+                "Geopolitical events in major oil-producing regions",
+                "Seasonal demand patterns"
+            },
+            "NG" => new List<string> {
+                "Weather forecasts, especially winter heating and summer cooling demand",
+                "Storage levels relative to 5-year averages",
+                "Production rates and rig counts",
+                "LNG export capacity and global demand",
+                "Substitution effects with other energy sources"
+            },
+            "HG" => new List<string> {
+                "Chinese economic activity and construction",
+                "Global manufacturing PMI data",
+                "Infrastructure spending initiatives",
+                "Mining production and disruptions",
+                "Green energy transition (electric vehicles, renewable energy)"
+            },
+            "C" => new List<string> {
+                "Weather conditions in major growing regions",
+                "USDA crop reports and acreage estimates",
+                "Ethanol demand and policies",
+                "Feed demand from livestock industry",
+                "Export competition and trade policies"
+            },
+            "W" => new List<string> {
+                "Global wheat stocks-to-use ratio",
+                "Weather events in major exporting countries",
+                "Export restrictions or quotas by major producers",
+                "Quality of harvest (protein content)",
+                "Substitution effects with other grains"
+            },
+            "S" => new List<string> {
+                "US-China trade relations",
+                "South American production (Brazil/Argentina)",
+                "Crushing demand for meal and oil",
+                "Biodiesel policies and demand",
+                "Competing oilseed production (canola, palm oil)"
+            },
+            _ => new List<string> {
+                "Supply and demand fundamentals",
+                "Global economic conditions",
+                "Seasonal factors",
+                "Regulatory changes",
+                "Technological developments"
+            }
+        };
+    }
+}

@@ -1,0 +1,303 @@
+@model PersonalFinanceTracker.ViewModels.StockDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Symbol} - Stock Details";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center">
+            <a asp-controller="Markets" asp-action="Index" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">@Model.CompanyName (@Model.Symbol)</h1>
+        </div>
+    </div>
+
+    <!-- Stock Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Price and Change -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Current Price</h2>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-2">$@Model.CurrentPrice.ToString("N2")</div>
+                <div class="flex justify-center items-center space-x-2">
+                    <span class="text-lg font-medium @(Model.Change >= 0 ? "text-green-600" : "text-red-600")">
+                        @(Model.Change >= 0 ? "+" : "")$@Model.Change.ToString("N2")
+                    </span>
+                    <span class="text-lg font-medium @(Model.PercentChange >= 0 ? "text-green-600" : "text-red-600")">
+                        (@(Model.PercentChange >= 0 ? "+" : "")@Model.PercentChange.ToString("N2")%)
+                    </span>
+                </div>
+                <div class="text-sm text-gray-500 mt-2">Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")</div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Key Metrics</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border-b border-r border-gray-200 pb-2 pr-2">
+                        <div class="text-xs text-gray-500">Open</div>
+                        <div class="text-sm font-medium text-gray-900">$@Model.Open.ToString("N2")</div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">High</div>
+                        <div class="text-sm font-medium text-gray-900">$@Model.High.ToString("N2")</div>
+                    </div>
+                    <div class="border-r border-gray-200 pt-2 pr-2">
+                        <div class="text-xs text-gray-500">Low</div>
+                        <div class="text-sm font-medium text-gray-900">$@Model.Low.ToString("N2")</div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="text-xs text-gray-500">Volume</div>
+                        <div class="text-sm font-medium text-gray-900">@Model.Volume.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Metrics -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Company Metrics</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border-b border-r border-gray-200 pb-2 pr-2">
+                        <div class="text-xs text-gray-500">Market Cap</div>
+                        <div class="text-sm font-medium text-gray-900">$@(Model.MarketCap / 1000000).ToString("N0")M</div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-2">
+                        <div class="text-xs text-gray-500">P/E Ratio</div>
+                        <div class="text-sm font-medium text-gray-900">@Model.PE.ToString("N2")</div>
+                    </div>
+                    <div class="border-r border-gray-200 pt-2 pr-2">
+                        <div class="text-xs text-gray-500">EPS</div>
+                        <div class="text-sm font-medium text-gray-900">$@Model.EPS.ToString("N2")</div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="text-xs text-gray-500">Dividend Yield</div>
+                        <div class="text-sm font-medium text-gray-900">@Model.DividendYield.ToString("N2")%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Chart -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 py-3 px-4">
+            <h2 class="text-lg font-medium text-white">Price History</h2>
+        </div>
+        <div class="p-4">
+            <div class="flex justify-end space-x-2 mb-4">
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="30">30D</button>
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="90">90D</button>
+                <button type="button" class="text-xs bg-indigo-600 text-white px-2 py-1 rounded chart-range active" data-range="180">180D</button>
+                <button type="button" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded chart-range" data-range="365">1Y</button>
+            </div>
+            <div class="w-full h-96" id="priceChart">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- 52-Week Range -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">52-Week Range</h2>
+            </div>
+            <div class="p-4">
+                <div class="relative pt-6 pb-2">
+                    <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                        <div>Low: $@Model.FiftyTwoWeekLow.ToString("N2")</div>
+                        <div>High: $@Model.FiftyTwoWeekHigh.ToString("N2")</div>
+                    </div>
+                    <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                        <div style="width:@(((Model.CurrentPrice - Model.FiftyTwoWeekLow) / (Model.FiftyTwoWeekHigh - Model.FiftyTwoWeekLow)) * 100)%" 
+                             class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500">
+                        </div>
+                    </div>
+                    <div class="absolute" style="left:@(((Model.CurrentPrice - Model.FiftyTwoWeekLow) / (Model.FiftyTwoWeekHigh - Model.FiftyTwoWeekLow)) * 100)%; top:0; transform: translateX(-50%)">
+                        <div class="text-xs text-indigo-800 bg-indigo-100 rounded px-1 py-0.5">Current</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beta & Other Info -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-yellow-500 to-orange-600 py-3 px-4">
+                <h2 class="text-lg font-medium text-white">Risk & Volatility</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Beta</div>
+                        <div class="text-lg font-medium text-gray-900">@Model.Beta.ToString("N2")</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            @if (Model.Beta > 1)
+                            {
+                                <span class="text-orange-600">Higher volatility than market</span>
+                            }
+                            else if (Model.Beta < 1)
+                            {
+                                <span class="text-green-600">Lower volatility than market</span>
+                            }
+                            else
+                            {
+                                <span>Same volatility as market</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Investment Rating</div>
+                        <div class="text-lg font-medium text-gray-900">
+                            @{
+                                var rating = "Hold";
+                                var ratingColor = "text-yellow-600";
+                                
+                                if (Model.PE < 15.0m && Model.Beta < 1.2m)
+                                {
+                                    rating = "Buy";
+                                    ratingColor = "text-green-600";
+                                }
+                                else if (Model.PE > 30.0m || Model.Beta > 1.5m)
+                                {
+                                    rating = "Sell";
+                                    ratingColor = "text-red-600";
+                                }
+                            }
+                            <span class="@ratingColor">@rating</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Simulated rating only</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const historicalData = @Html.Raw(ViewBag.HistoricalDataJson);
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            
+            // Format dates for chart
+            const dates = historicalData.map(item => new Date(item.date));
+            const prices = historicalData.map(item => item.close);
+            
+            // Create the chart
+            const stockChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: '@Model.Symbol Price',
+                        data: prices,
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                tooltipFormat: 'MMM d, yyyy'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Handle range buttons
+            const rangeButtons = document.querySelectorAll('.chart-range');
+            rangeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const days = parseInt(this.dataset.range);
+                    
+                    // Update active button
+                    rangeButtons.forEach(btn => {
+                        btn.classList.remove('bg-indigo-600', 'text-white');
+                        btn.classList.add('bg-indigo-100', 'text-indigo-800');
+                    });
+                    this.classList.remove('bg-indigo-100', 'text-indigo-800');
+                    this.classList.add('bg-indigo-600', 'text-white');
+                    
+                    // Filter data based on selected range
+                    const filteredDates = [];
+                    const filteredPrices = [];
+                    
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - days);
+                    
+                    for (let i = 0; i < historicalData.length; i++) {
+                        const date = new Date(historicalData[i].date);
+                        if (date >= cutoffDate) {
+                            filteredDates.push(date);
+                            filteredPrices.push(historicalData[i].close);
+                        }
+                    }
+                    
+                    // Update chart data
+                    stockChart.data.labels = filteredDates;
+                    stockChart.data.datasets[0].data = filteredPrices;
+                    stockChart.update();
+                });
+            });
+            
+            // Trigger 180-day view by default
+            document.querySelector('[data-range="180"]').click();
+        });
+    </script>
+}

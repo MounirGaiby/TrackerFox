@@ -1,0 +1,101 @@
+@model PersonalFinanceTracker.ViewModels.EditAccountViewModel
+
+@{
+    ViewData["Title"] = "Edit Account";
+}
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center space-x-4 mb-6">
+            <a asp-action="Index" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">Edit Account</h1>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 animate-slide-in">
+        <form asp-action="Edit" method="post" class="space-y-6">
+            <input asp-for="Id" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="text-red-600 bg-red-50 p-4 rounded-lg mb-6"></div>
+
+            <div>
+                <label asp-for="Name" class="block text-sm font-medium text-gray-700 mb-2">Account Name</label>
+                <input asp-for="Name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200" placeholder="e.g., Main Checking, Emergency Savings">
+                <span asp-validation-for="Name" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Type" class="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
+                <select asp-for="Type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                    <option value="">Select account type</option>
+                    <option value="Checking">Checking Account</option>
+                    <option value="Savings">Savings Account</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Investment">Investment Account</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Type" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Current Balance</label>
+                <div class="bg-gray-50 px-4 py-3 rounded-lg border">
+                    <span class="text-lg font-semibold @(Model.CurrentBalance >= 0 ? "text-green-600" : "text-red-600")">
+                        @Model.CurrentBalance.ToString("C")
+                    </span>
+                </div>
+                <p class="mt-1 text-sm text-gray-500">Balance is automatically calculated from transactions</p>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
+                <textarea asp-for="Description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200" placeholder="Add any additional notes about this account..."></textarea>
+                <span asp-validation-for="Description" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="flex space-x-4 pt-6">
+                <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md">
+                    Update Account
+                </button>
+                <a asp-action="Index" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg font-medium text-center transition-colors duration-200">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+        <!-- Delete Account Section -->
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <div class="bg-red-50 rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <h3 class="text-sm font-medium text-red-800">Danger Zone</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <p>Deleting this account will also delete all associated transactions. This action cannot be undone.</p>
+                        </div>
+                        <div class="mt-4">
+                            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" 
+                                  onsubmit="return confirm('Are you sure you want to delete this account? This will also delete all associated transactions and cannot be undone.')">
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                    Delete Account
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
