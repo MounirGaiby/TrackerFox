@@ -89,4 +89,4 @@ artifacts/
 appsettings.Development.json
 
 # LibMan managed libraries
-wwwroot/lib/
+PersonalFinanceTracker/wwwroot/lib/

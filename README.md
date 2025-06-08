@@ -51,6 +51,7 @@ A comprehensive personal finance management web application built with ASP.NET C
 ### Prerequisites
 - .NET 8 SDK
 - Node.js and npm (for Tailwind CSS)
+- LibMan CLI (for client-side library management)
 
 ### Installation
 
@@ -60,22 +61,33 @@ git clone https://github.com/yourusername/personal-finance-tracker.git
 cd personal-finance-tracker
 ```
 
-2. Restore dependencies
+2. Install LibMan CLI globally (if not already installed)
+```
+dotnet tool install -g Microsoft.Web.LibraryManager.Cli
+```
+
+3. Restore .NET dependencies
 ```
 dotnet restore
 ```
 
-3. Set up the database
+4. Restore client-side libraries
+```
+cd PersonalFinanceTracker
+libman restore
+```
+
+5. Set up the database
 ```
 dotnet ef database update
 ```
 
-4. Configure OpenRouter API
+6. Configure OpenRouter API
    - Create an account on [OpenRouter](https://openrouter.ai)
    - Get your API key
    - Update the API key in `appsettings.json`
 
-5. Run the application
+7. Run the application
 ```
 dotnet run
 ```
