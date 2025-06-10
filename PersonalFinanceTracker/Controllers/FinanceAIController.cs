@@ -295,6 +295,8 @@ namespace PersonalFinanceTracker.Controllers
                 var httpClient = _httpClientFactory.CreateClient();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openRouterApiKey);
 
+                Console.WriteLine($"Using OpenRouter API Key: {openRouterApiKey}");
+
                 var requestBody = new
                 {
                     model = "deepseek/deepseek-r1-distill-qwen-7b",
@@ -396,11 +398,8 @@ namespace PersonalFinanceTracker.Controllers
             prompt.AppendLine($"You are a highly knowledgeable and friendly Financial AI Assistant named 'FinBot'. You are helping {userName} with their personal finances.");
             prompt.AppendLine();
             prompt.AppendLine("CRITICAL RULES:");
-            prompt.AppendLine("1. ONLY discuss financial topics: budgeting, saving, investing, expenses, debt management, financial planning, taxes, retirement, insurance, and related topics.");
+            prompt.AppendLine("1. ONLY discuss financial topics");
             prompt.AppendLine("2. If asked about non-financial topics, politely redirect: 'I'm specialized in financial advice. Let's talk about your finances - how can I help you save, invest, or manage your money better?'");
-            prompt.AppendLine("3. Keep responses concise (under 500 words) but helpful and actionable.");
-            prompt.AppendLine("4. Always address the user personally and provide specific advice based on their data.");
-            prompt.AppendLine("5. Be encouraging and supportive while being realistic about financial goals.");
             prompt.AppendLine();
 
             // Add user's financial context
@@ -411,6 +410,7 @@ namespace PersonalFinanceTracker.Controllers
                 prompt.AppendLine($"- Monthly Income: ${context.BasicSummary.MonthlyIncome:N2}");
                 prompt.AppendLine($"- Monthly Expenses: ${context.BasicSummary.MonthlyExpenses:N2}");
                 prompt.AppendLine($"- Number of Accounts: {context.BasicSummary.AccountCount}");
+                prompt.AppendLine($"- Total Savings: ${context.BasicSummary.TotalBalance - context.BasicSummary.MonthlyExpenses:N2}");
                 
                 if (context.BasicSummary.MonthlyIncome > 0)
                 {
@@ -453,10 +453,6 @@ namespace PersonalFinanceTracker.Controllers
 
             prompt.AppendLine("RESPONSE GUIDELINES:");
             prompt.AppendLine($"- Always address {userName} personally");
-            prompt.AppendLine("- Provide specific, actionable advice based on their financial data");
-            prompt.AppendLine("- Suggest practical next steps they can take");
-            prompt.AppendLine("- Reference financial best practices (e.g., emergency fund, 50/30/20 rule)");
-            prompt.AppendLine("- Be encouraging but realistic about their financial situation");
             prompt.AppendLine("- No need to keep repeating the user's name in every response, but use it naturally when appropriate");
             prompt.AppendLine("- If the user asks for general financial advice, provide it based on their context");
             prompt.AppendLine("- If the user asks about non-financial topics, politely redirect them to financial matters");
