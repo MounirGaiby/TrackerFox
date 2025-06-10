@@ -86,11 +86,6 @@ namespace PersonalFinanceTracker.Controllers
 
                 var categories = await _context.Categories.ToListAsync();
 
-                var budgetGoals = await _context.BudgetGoals
-                    .Where(bg => bg.UserId == user.Id)
-                    .Include(bg => bg.Category)
-                    .ToListAsync();
-
                 // Create export data object
                 var exportData = new
                 {
@@ -127,15 +122,6 @@ namespace PersonalFinanceTracker.Controllers
                         c.Id,
                         c.Name,
                         c.Description
-                    }),
-                    BudgetGoals = budgetGoals.Select(bg => new
-                    {
-                        bg.Id,
-                        bg.Amount,
-                        StartDate = bg.StartDate,
-                        EndDate = bg.EndDate,
-                        bg.CreatedAt,
-                        Category = bg.Category?.Name
                     })
                 };
 
@@ -187,12 +173,6 @@ namespace PersonalFinanceTracker.Controllers
                     .Where(t => accountIds.Contains(t.AccountId))
                     .ToListAsync();
                 _context.Transactions.RemoveRange(transactions);
-
-                // Delete budget goals
-                var budgetGoals = await _context.BudgetGoals
-                    .Where(bg => bg.UserId == user.Id)
-                    .ToListAsync();
-                _context.BudgetGoals.RemoveRange(budgetGoals);
 
                 // Delete conversations and chat messages
                 var conversations = await _context.Conversations

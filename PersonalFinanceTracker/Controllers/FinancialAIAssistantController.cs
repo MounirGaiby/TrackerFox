@@ -251,12 +251,6 @@ namespace PersonalFinanceTracker.Controllers
                 },
                 new FinancialKeyword
                 {
-                    Keyword = "#budget",
-                    Description = "Review budget goals and progress",
-                    Example = "How am I doing with my #budget this month?"
-                },
-                new FinancialKeyword
-                {
                     Keyword = "#savings",
                     Description = "Get savings insights and recommendations",
                     Example = "Give me #savings tips based on my spending"
@@ -283,11 +277,6 @@ namespace PersonalFinanceTracker.Controllers
                 {
                     Text = "Analyze recent spending",
                     Action = "Analyze my #spending from last month"
-                },
-                new QuickAction
-                {
-                    Text = "Check budget progress",
-                    Action = "How am I doing with my #budget goals?"
                 },
                 new QuickAction
                 {

@@ -50,7 +50,7 @@ namespace PersonalFinanceTracker.Controllers
                 UserName = userName,
                 AvailableKeywords = GetAvailableKeywords(),
                 QuickActions = GetQuickActions(),
-                WelcomeMessage = $"Hello {userName}! I'm your Financial AI Assistant. I can help you with budgeting, spending analysis, and financial planning. Use keywords like @accounts or #spending to get specific insights, or just ask me anything about your finances!"
+                WelcomeMessage = $"Hello {userName}! I'm your Financial AI Assistant. I can help you with spending analysis, and financial planning. Use keywords like @accounts or #spending to get specific insights, or just ask me anything about your finances!"
             };
 
             return View(viewModel);
@@ -148,8 +148,6 @@ namespace PersonalFinanceTracker.Controllers
                 return Models.ContextType.Transactions;
             if (lowerMessage.Contains("#spending") || lowerMessage.Contains("#expenses"))
                 return Models.ContextType.Spending;
-            if (lowerMessage.Contains("#budget") || lowerMessage.Contains("#budgeting"))
-                return Models.ContextType.Budget;
             if (lowerMessage.Contains("#savings") || lowerMessage.Contains("#save"))
                 return Models.ContextType.Savings;
             if (lowerMessage.Contains("#investment") || lowerMessage.Contains("#investing"))
@@ -209,26 +207,6 @@ namespace PersonalFinanceTracker.Controllers
                 }
 
                 context.SpendingData = await query.ToListAsync();
-            }
-
-            if (lowerMessage.Contains("#budget") || lowerMessage.Contains("#budgeting"))
-            {
-                context.BudgetGoals = await _context.BudgetGoals
-                    .Include(bg => bg.Category)
-                    .Where(bg => bg.UserId == userId)
-                    .ToListAsync();
-
-                var currentMonth = DateTime.UtcNow.Month;
-                var currentYear = DateTime.UtcNow.Year;
-                
-                context.CurrentMonthExpenses = await _context.Transactions
-                    .Include(t => t.Category)
-                    .Include(t => t.Account)
-                    .Where(t => t.Account.UserId == userId &&
-                               t.Date.Month == currentMonth &&
-                               t.Date.Year == currentYear &&
-                               t.Type == TransactionType.Expense)
-                    .ToListAsync();
             }
 
             // Always include basic financial summary
@@ -420,7 +398,7 @@ namespace PersonalFinanceTracker.Controllers
             prompt.AppendLine("CRITICAL RULES:");
             prompt.AppendLine("1. ONLY discuss financial topics: budgeting, saving, investing, expenses, debt management, financial planning, taxes, retirement, insurance, and related topics.");
             prompt.AppendLine("2. If asked about non-financial topics, politely redirect: 'I'm specialized in financial advice. Let's talk about your finances - how can I help you save, invest, or manage your money better?'");
-            prompt.AppendLine("3. Keep responses concise (under 150 words) but helpful and actionable.");
+            prompt.AppendLine("3. Keep responses concise (under 500 words) but helpful and actionable.");
             prompt.AppendLine("4. Always address the user personally and provide specific advice based on their data.");
             prompt.AppendLine("5. Be encouraging and supportive while being realistic about financial goals.");
             prompt.AppendLine();
@@ -473,34 +451,23 @@ namespace PersonalFinanceTracker.Controllers
                 prompt.AppendLine();
             }
 
-            if (context.BudgetGoals?.Any() == true)
-            {
-                prompt.AppendLine("BUDGET GOALS STATUS:");
-                foreach (var goal in context.BudgetGoals.Take(5))
-                {
-                    var spent = context.CurrentMonthExpenses?
-                        .Where(t => t.CategoryId == goal.CategoryId)
-                        .Sum(t => t.Amount) ?? 0;
-                    var progress = goal.Amount > 0 ? (spent / goal.Amount) * 100 : 0;
-                    var status = progress > 100 ? "Over Budget" : progress > 80 ? "Close to Limit" : "On Track";
-                    
-                    prompt.AppendLine($"- {goal.Category?.Name}: ${spent:N2} / ${goal.Amount:N2} ({progress:N1}%) - {status}");
-                }
-                prompt.AppendLine();
-            }
-
             prompt.AppendLine("RESPONSE GUIDELINES:");
             prompt.AppendLine($"- Always address {userName} personally");
             prompt.AppendLine("- Provide specific, actionable advice based on their financial data");
             prompt.AppendLine("- Suggest practical next steps they can take");
             prompt.AppendLine("- Reference financial best practices (e.g., emergency fund, 50/30/20 rule)");
             prompt.AppendLine("- Be encouraging but realistic about their financial situation");
+            prompt.AppendLine("- No need to keep repeating the user's name in every response, but use it naturally when appropriate");
+            prompt.AppendLine("- If the user asks for general financial advice, provide it based on their context");
+            prompt.AppendLine("- If the user asks about non-financial topics, politely redirect them to financial matters");
+            prompt.AppendLine("- No need to keep repeating the users financial data if it's out of context");
+            prompt.AppendLine("- No need to repeat yourself in subsequent response unless needed like restating the user savings etc");
+            prompt.AppendLine("- Drop hard hitting quotes naturally and randomly 1 in 5 chance without making them appear out of context");
             prompt.AppendLine();
             prompt.AppendLine("AVAILABLE KEYWORDS for users:");
             prompt.AppendLine("- @accounts - Get account information");
             prompt.AppendLine("- @transactions [days] - Get recent transactions");
             prompt.AppendLine("- #spending [category] - Analyze spending");
-            prompt.AppendLine("- #budget - Check budget progress");
             prompt.AppendLine("- #savings - Savings advice");
             prompt.AppendLine("- #investment - Investment guidance");
 
@@ -544,7 +511,6 @@ namespace PersonalFinanceTracker.Controllers
                 new() { Keyword = "@accounts", Description = "Get information about your accounts", Example = "@accounts" },
                 new() { Keyword = "@transactions", Description = "Show recent transactions", Example = "@transactions 30" },
                 new() { Keyword = "#spending", Description = "Analyze spending patterns", Example = "#spending groceries" },
-                new() { Keyword = "#budget", Description = "Check budget progress", Example = "#budget" },
                 new() { Keyword = "#savings", Description = "Get savings advice", Example = "#savings tips" },
                 new() { Keyword = "#investment", Description = "Investment guidance", Example = "#investment strategy" }
             };
@@ -556,7 +522,6 @@ namespace PersonalFinanceTracker.Controllers
             {
                 new() { Text = "Show my account balances", Action = "@accounts" },
                 new() { Text = "Analyze my spending this month", Action = "#spending" },
-                new() { Text = "Check my budget progress", Action = "#budget" },
                 new() { Text = "Recent transactions", Action = "@transactions 14" },
                 new() { Text = "How can I save more money?", Action = "#savings help" },
                 new() { Text = "Investment advice for beginners", Action = "#investment beginner" }

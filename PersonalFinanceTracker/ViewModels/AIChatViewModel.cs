@@ -64,7 +64,6 @@ namespace PersonalFinanceTracker.ViewModels
         public List<Account>? Accounts { get; set; }
         public List<Transaction>? RecentTransactions { get; set; }
         public List<Transaction>? SpendingData { get; set; }
-        public List<BudgetGoalModel>? BudgetGoals { get; set; }
         public List<Transaction>? CurrentMonthExpenses { get; set; }
     }
 

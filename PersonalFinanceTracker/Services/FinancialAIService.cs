@@ -229,8 +229,6 @@ namespace PersonalFinanceTracker.Services
                 return Models.ContextType.Transactions;
             if (lowerMessage.Contains("#spending") || lowerMessage.Contains("#expenses"))
                 return Models.ContextType.Spending;
-            if (lowerMessage.Contains("#budget") || lowerMessage.Contains("#budgeting"))
-                return Models.ContextType.Budget;
             if (lowerMessage.Contains("#savings") || lowerMessage.Contains("#save"))
                 return Models.ContextType.Savings;
             if (lowerMessage.Contains("#investment") || lowerMessage.Contains("#investing"))
@@ -287,26 +285,6 @@ namespace PersonalFinanceTracker.Services
                 }
 
                 context.SpendingData = await query.ToListAsync();
-            }
-
-            if (contextType == ContextType.Budget || lowerMessage.Contains("#budget"))
-            {
-                context.BudgetGoals = await _context.BudgetGoals
-                    .Include(bg => bg.Category)
-                    .Where(bg => bg.UserId == userId)
-                    .ToListAsync();
-
-                var currentMonth = DateTime.Now.Month;
-                var currentYear = DateTime.Now.Year;
-                
-                context.CurrentMonthExpenses = await _context.Transactions
-                    .Include(t => t.Category)
-                    .Include(t => t.Account)
-                    .Where(t => t.Account.UserId == userId &&
-                               t.Date.Month == currentMonth &&
-                               t.Date.Year == currentYear &&
-                               t.Type == TransactionType.Expense)
-                    .ToListAsync();
             }
 
             return context;
@@ -470,23 +448,7 @@ namespace PersonalFinanceTracker.Services
                 }
                 prompt.AppendLine();
             }
-
-            if (context.BudgetGoals?.Any() == true)
-            {
-                prompt.AppendLine("BUDGET GOALS STATUS:");
-                foreach (var goal in context.BudgetGoals.Take(5))
-                {
-                    var spent = context.CurrentMonthExpenses?
-                        .Where(t => t.CategoryId == goal.CategoryId)
-                        .Sum(t => t.Amount) ?? 0;
-                    var progress = goal.Amount > 0 ? (spent / goal.Amount) * 100 : 0;
-                    var status = progress > 100 ? "Over Budget" : progress > 80 ? "Close to Limit" : "On Track";
-                    
-                    prompt.AppendLine($"- {goal.Category?.Name}: ${spent:N2} / ${goal.Amount:N2} ({progress:N1}%) - {status}");
-                }
-                prompt.AppendLine();
-            }
-
+        
             prompt.AppendLine("RESPONSE GUIDELINES:");
             prompt.AppendLine($"- Always address {userName} personally");
             prompt.AppendLine("- Provide specific, actionable advice based on their financial data");
@@ -498,7 +460,6 @@ namespace PersonalFinanceTracker.Services
             prompt.AppendLine("- @accounts - Get account information");
             prompt.AppendLine("- @transactions [days] - Get recent transactions");
             prompt.AppendLine("- #spending [category] - Analyze spending");
-            prompt.AppendLine("- #budget - Check budget progress");
             prompt.AppendLine("- #savings - Savings advice");
             prompt.AppendLine("- #investment - Investment guidance");
 

@@ -1,835 +1,474 @@
+@using PersonalFinanceTracker.Models
+@using PersonalFinanceTracker.ViewModels
+@using System.Globalization
+@model AnalyticsViewModel
 @{
     ViewData["Title"] = "Financial Analytics";
+    var cultureInfo = CultureInfo.InvariantCulture; // For consistent number formatting in JavaScript
 }
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8 animate-fade-in">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Financial Analytics</h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-300">Advanced insights and financial metrics</p>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Financial Analytics</h1>
+        <div class="flex flex-wrap items-center gap-2 md:gap-4">
+            <!-- Date Range Filter -->
+            <div class="flex items-center gap-2">
+                <label for="startDate" class="text-sm font-medium text-gray-700 dark:text-gray-300">From:</label>
+                <input type="date" id="startDate" name="startDate"
+                       class="form-input block w-full sm:w-auto rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                       value="@Model.StartDate.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="endDate" class="text-sm font-medium text-gray-700 dark:text-gray-300">To:</label>
+                <input type="date" id="endDate" name="endDate"
+                       class="form-input block w-full sm:w-auto rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                       value="@Model.EndDate.ToString("yyyy-MM-dd")">
+            </div>
+
+            <!-- Account Filter -->
+            <div class="flex items-center gap-2">
+                <label for="accountId" class="text-sm font-medium text-gray-700 dark:text-gray-300">Account:</label>
+                <select id="accountId" name="accountId"
+                        class="form-select block w-full sm:w-auto rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="">All Accounts</option>
+                    @foreach (var account in Model.AvailableAccounts)
+                    {
+                        <option value="@account.Id" selected="@(Model.AccountId == account.Id)">@account.Name</option>
+                    }
+                </select>
+            </div>
+            <button id="applyFiltersBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium">Apply Filters</button>
         </div>
     </div>
 
-    <!-- Success/Error Messages -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 animate-fade-in">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="text-green-800 dark:text-green-300 font-medium">@TempData["Success"]</span>
-            </div>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Total Income</h3>
+            <p class="text-3xl font-bold text-green-500">@Model.TotalIncome.ToString("C")</p>
         </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 animate-fade-in">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
-                </svg>
-                <span class="text-red-800 dark:text-red-300 font-medium">@TempData["Error"]</span>
-            </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Total Expenses</h3>
+            <p class="text-3xl font-bold text-red-500">@Model.TotalExpenses.ToString("C")</p>
         </div>
-    }
-
-    <!-- Analytics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Net Worth Over Time</h3>
-            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="netWorthChart">
-                <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                </div>
-            </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Net Flow</h3>
+            <p class="text-3xl font-bold @(Model.NetFlow >= 0 ? "text-blue-500" : "text-orange-500")">@Model.NetFlow.ToString("C")</p>
         </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Monthly Income vs. Expenses</h3>
-            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="incomeExpenseChart">
-                <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Monthly Savings Rate</h3>
-            <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="savingsRateChart">
-                <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                </div>
-            </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Transactions</h3>
+            <p class="text-3xl font-bold text-gray-600 dark:text-gray-300">@Model.TotalTransactions</p>
         </div>
     </div>
 
-    <!-- Analysis Section -->
+    <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Spending By Category</h3>
-            <div class="w-full h-80 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="categorySpendingChart">
-                <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                </div>
+        <!-- Spending by Category (Pie Chart) -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Spending by Category</h3>
+            <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                <canvas id="spendingByCategoryChart"></canvas>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Spending By Day of Week</h3>
-            <div class="w-full h-80 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="dayOfWeekSpendingChart">
-                <div class="animate-pulse flex flex-col items-center">
-                    <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                    <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                </div>
+        <!-- Income vs Expenses (Bar Chart) -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Income vs. Expenses Trend</h3>
+             <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                <canvas id="incomeVsExpensesChart"></canvas>
             </div>
         </div>
     </div>
-
-    <!-- Top Insights -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Spending Categories</h3>
-            <div class="space-y-4" id="topCategories">
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-3/4"></div>
-                </div>
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-2/3"></div>
-                </div>
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-1/2"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Merchants</h3>
-            <div class="space-y-4" id="topMerchants">
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-3/4"></div>
-                </div>
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-2/3"></div>
-                </div>
-                <div class="animate-pulse">
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-indigo-100 dark:bg-indigo-800 rounded w-1/2"></div>
-                </div>
-            </div>
+    
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Cash Flow Over Time</h3>
+        <div class="chart-container" style="position: relative; height:40vh; width:100%">
+            <canvas id="cashFlowChart"></canvas>
         </div>
     </div>
 
-    <!-- Future Predictions -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Future Predictions</h3>
-        <div class="flex flex-col md:flex-row md:space-x-6">
-            <div class="w-full md:w-1/2">
-                <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">Projected Expenses (Next 3 Months)</h4>
-                <div class="w-full h-60 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center" id="projectedExpensesChart">
-                    <div class="animate-pulse flex flex-col items-center">
-                        <div class="w-10 h-10 bg-indigo-200 dark:bg-indigo-600 rounded-full mb-2"></div>
-                        <div class="h-2 w-24 bg-indigo-200 dark:bg-indigo-600 rounded"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full md:w-1/2 mt-6 md:mt-0">
-                <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">AI Financial Recommendations</h4>
-                <div class="space-y-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 rounded-lg border border-indigo-100 dark:border-indigo-800">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white text-xs">💡</span>
-                        </div>
-                        <div>
-                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Savings Opportunity</h5>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Based on your spending patterns, you could save an additional $245 monthly by reducing restaurant expenses.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white text-xs">📈</span>
-                        </div>
-                        <div>
-                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Investment Potential</h5>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Redirecting your monthly savings to investments could yield approximately $1,250 annually.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white text-xs">🎯</span>
-                        </div>
-                        <div>
-                            <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Budget Adjustment</h5>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Your utility spending is 15% higher than similar households. Consider energy-saving measures.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Budget Goals and AI Insights Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Budget Goals Tracking -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Budget Goals Progress</h3>
-                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium" onclick="openBudgetGoalModal()">
-                    + Add Goal
-                </button>
+    <!-- Recent Transactions Table -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Recent Transactions</h3>
+        @if (Model.RecentTransactions.Any())
+        {
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Account</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach (var transaction in Model.RecentTransactions)
+                        {
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">@transaction.Date.ToString("yyyy-MM-dd")</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">@transaction.Description</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">@transaction.Category?.Name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">@transaction.Account?.Name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right @(transaction.Type == TransactionType.Income ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
+                                    @(transaction.Type == TransactionType.Income ? "+" : "-")@transaction.Amount.ToString("N2", cultureInfo)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
-            <div class="space-y-4" id="budgetGoalsContainer">
-                <div class="animate-pulse">
-                    <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
-                    <div class="h-3 bg-gray-100 dark:bg-gray-700 rounded w-full mb-2"></div>
-                    <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- AI Financial Insights -->
-        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl shadow-sm border border-indigo-200 dark:border-indigo-800 hover:shadow-md transition-shadow duration-200 animate-slide-in">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">AI Financial Insights</h3>
-                <button class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all duration-200" onclick="refreshAIInsights()">
-                    🤖 Refresh
-                </button>
-            </div>
-            <div class="space-y-4" id="aiInsightsContainer">
-                <div class="flex items-start space-x-3">
-                    <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span class="text-white text-xs">🔍</span>
-                    </div>
-                    <div>
-                        <h5 class="text-sm font-medium text-gray-800 dark:text-gray-200">Analyzing your financial data...</h5>
-                        <p class="text-sm text-gray-600 dark:text-gray-300">AI insights will appear here once analysis is complete.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Recommendations Dashboard -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 mb-8 animate-slide-in">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personalized AI Recommendations</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                <div class="flex items-center mb-3">
-                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xs">💰</span>
-                    </div>
-                    <h4 class="ml-3 text-sm font-semibold text-green-800 dark:text-green-300">Savings Optimization</h4>
-                </div>
-                <div id="savingsRecommendation" class="text-sm text-green-700 dark:text-green-400">
-                    Loading personalized savings recommendations...
-                </div>
-            </div>
-            
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                <div class="flex items-center mb-3">
-                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xs">📊</span>
-                    </div>
-                    <h4 class="ml-3 text-sm font-semibold text-blue-800 dark:text-blue-300">Budget Adjustments</h4>
-                </div>
-                <div id="budgetRecommendation" class="text-sm text-blue-700 dark:text-blue-400">
-                    Analyzing spending patterns for budget optimization...
-                </div>
-            </div>
-            
-            <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
-                <div class="flex items-center mb-3">
-                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xs">🎯</span>
-                    </div>
-                    <h4 class="ml-3 text-sm font-semibold text-purple-800 dark:text-purple-300">Investment Opportunities</h4>
-                </div>
-                <div id="investmentRecommendation" class="text-sm text-purple-700 dark:text-purple-400">
-                    Evaluating investment potential based on your profile...
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Budget Goal Modal -->
-    <div id="budgetGoalModal" class="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-75 hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Budget Goal</h3>
-                        <button onclick="closeBudgetGoalModal()" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
-                            <span class="sr-only">Close</span>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <form id="budgetGoalForm">
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
-                            <select id="goalCategory" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
-                                <option value="">Select a category</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Monthly Budget Amount</label>
-                            <input type="number" id="goalAmount" step="0.01" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white" placeholder="0.00">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Date</label>
-                            <input type="date" id="goalStartDate" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
-                            <textarea id="goalNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white" placeholder="Any additional notes..."></textarea>
-                        </div>
-                        <div class="flex justify-end space-x-3">
-                            <button type="button" onclick="closeBudgetGoalModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
-                            <button type="submit" class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">Create Goal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        }
+        else
+        {
+            <p class="text-gray-500 dark:text-gray-400">No transactions found for the selected period.</p>
+        }
     </div>
 </div>
 
 @section Scripts {
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-        // Data from the controller
-        const monthlyCategorySpending = @Html.Raw(ViewBag.MonthlyCategorySpendingJson);
-        const monthlyTotals = @Html.Raw(ViewBag.MonthlyTotalsJson);
-        const dayOfWeekSpending = @Html.Raw(ViewBag.DayOfWeekSpendingJson);
-        const netWorthOverTime = @Html.Raw(ViewBag.NetWorthOverTimeJson);
-        const topCategories = @Html.Raw(ViewBag.TopCategoriesJson);
-        const topMerchants = @Html.Raw(ViewBag.TopMerchantsJson);
-        const savingsRates = @Html.Raw(ViewBag.SavingsRatesJson);
-        
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
-        // Colors for charts
-        const chartColors = [
-            'rgba(99, 102, 241, 0.8)',    // Indigo
-            'rgba(139, 92, 246, 0.8)',    // Purple
-            'rgba(216, 180, 254, 0.8)',   // Light Purple
-            'rgba(251, 113, 133, 0.8)',   // Pink
-            'rgba(14, 165, 233, 0.8)',    // Sky Blue
-            'rgba(34, 211, 238, 0.8)',    // Cyan
-            'rgba(16, 185, 129, 0.8)',    // Green
-            'rgba(250, 204, 21, 0.8)',    // Yellow
-            'rgba(249, 115, 22, 0.8)',    // Orange
-            'rgba(239, 68, 68, 0.8)',     // Red
-        ];
-        
-        // Set up charts after page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Net Worth Over Time Chart
-            const netWorthData = {
-                labels: netWorthOverTime.map(item => months[item.month - 1]),
-                datasets: [{
-                    label: 'Net Worth',
-                    data: netWorthOverTime.map(item => item.netWorth),
-                    borderColor: 'rgba(99, 102, 241, 1)',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            };
-            
-            new Chart(document.getElementById('netWorthChart'), {
-                type: 'line',
-                data: netWorthData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Net Worth: $' + context.raw.toLocaleString();
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Income vs Expense Chart
-            const incomeExpenseData = {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Income',
-                        data: months.map((_, index) => {
-                            const match = monthlyTotals.find(t => t.month === index + 1 && t.type === 0);
-                            return match ? match.amount : 0;
-                        }),
-                        backgroundColor: 'rgba(16, 185, 129, 0.7)', // Green
-                    },
-                    {
-                        label: 'Expenses',
-                        data: months.map((_, index) => {
-                            const match = monthlyTotals.find(t => t.month === index + 1 && t.type === 1);
-                            return match ? match.amount : 0;
-                        }),
-                        backgroundColor: 'rgba(239, 68, 68, 0.7)', // Red
-                    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart instances
+            let spendingByCategoryChartInstance;
+            let incomeVsExpensesChartInstance;
+            let cashFlowChartInstance;
+
+            // Default Chart Colors (Tailwind-like)
+            const chartColors = {
+                primary: 'rgba(79, 70, 229, 0.8)', // indigo-600
+                secondary: 'rgba(239, 68, 68, 0.8)', // red-500
+                tertiary: 'rgba(34, 197, 94, 0.8)', // green-500
+                neutral: 'rgba(107, 114, 128, 0.8)', // gray-500
+                pieSliceColors: [
+                    'rgba(59, 130, 246, 0.7)', 'rgba(239, 68, 68, 0.7)', 'rgba(245, 158, 11, 0.7)',
+                    'rgba(16, 185, 129, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(236, 72, 153, 0.7)',
+                    'rgba(99, 102, 241, 0.7)', 'rgba(244, 63, 94, 0.7)', 'rgba(251, 146, 60, 0.7)',
+                    'rgba(34, 197, 94, 0.7)', 'rgba(124, 58, 237, 0.7)', 'rgba(219, 39, 119, 0.7)'
                 ]
             };
             
-            new Chart(document.getElementById('incomeExpenseChart'), {
-                type: 'bar',
-                data: incomeExpenseData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
+            const commonChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: document.body.classList.contains('dark') ? '#D1D5DB' : '#374151', // gray-300 or gray-700
+                            font: { size: 12 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: document.body.classList.contains('dark') ? '#9CA3AF' : '#4B5563', // gray-400 or gray-600
+                             font: { size: 10 }
+                        },
+                        grid: {
+                            color: document.body.classList.contains('dark') ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.5)' // gray-600 or gray-200
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: document.body.classList.contains('dark') ? '#9CA3AF' : '#4B5563',
+                            font: { size: 10 },
+                            callback: function(value) { return '$' + value.toLocaleString(); }
+                        },
+                        grid: {
+                            color: document.body.classList.contains('dark') ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.5)'
+                        }
+                    }
+                }
+            };
+
+
+            function createSpendingByCategoryChart(data) {
+                const ctx = document.getElementById('spendingByCategoryChart').getContext('2d');
+                if (spendingByCategoryChartInstance) {
+                    spendingByCategoryChartInstance.destroy();
+                }
+                if (!data || data.length === 0) {
+                    // Display a message if no data
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = document.body.classList.contains('dark') ? '#9CA3AF' : '#6B7280';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('No spending data for selected period.', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return;
+                }
+                spendingByCategoryChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.map(item => item.categoryName),
+                        datasets: [{
+                            label: 'Spending',
+                            data: data.map(item => item.totalAmount),
+                            backgroundColor: chartColors.pieSliceColors,
+                            borderColor: document.body.classList.contains('dark') ? '#374151' : '#FFFFFF', // gray-700 or white
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed);
+                                        }
+                                        const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                        const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(2) : 0;
+                                        label += ` (${percentage}%)`;
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {} // No scales for pie chart
+                    }
+                });
+            }
+
+            function createIncomeVsExpensesChart(data) {
+                const ctx = document.getElementById('incomeVsExpensesChart').getContext('2d');
+                 if (incomeVsExpensesChartInstance) {
+                    incomeVsExpensesChartInstance.destroy();
+                }
+                if (!data || !data.labels || data.labels.length === 0) {
+                     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = document.body.classList.contains('dark') ? '#9CA3AF' : '#6B7280';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('No income/expense data for trend analysis.', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return;
+                }
+                incomeVsExpensesChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels, // e.g., ['Jan', 'Feb', 'Mar']
+                        datasets: [
+                            {
+                                label: 'Total Income',
+                                data: data.incomeData,
+                                backgroundColor: chartColors.tertiary,
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Total Expenses',
+                                data: data.expenseData,
+                                backgroundColor: chartColors.secondary,
+                                borderColor: 'rgba(239, 68, 68, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                         scales: {
+                             x: {
+                                ...commonChartOptions.scales.x,
+                                title: { display: true, text: 'Month', color: commonChartOptions.scales.x.ticks.color }
+                            },
+                            y: {
+                                ...commonChartOptions.scales.y,
+                                title: { display: true, text: 'Amount (USD)', color: commonChartOptions.scales.y.ticks.color }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function createCashFlowChart(data) {
+                const ctx = document.getElementById('cashFlowChart').getContext('2d');
+                if (cashFlowChartInstance) {
+                    cashFlowChartInstance.destroy();
+                }
+                 if (!data || !data.labels || data.labels.length === 0) {
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = document.body.classList.contains('dark') ? '#9CA3AF' : '#6B7280';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('No data for cash flow analysis.', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return;
+                }
+                cashFlowChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels, // Dates
+                        datasets: [{
+                            label: 'Cash Flow (Income - Expenses)',
+                            data: data.cashFlowData,
+                            borderColor: chartColors.primary,
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)', // Lighter fill
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        scales: {
+                            x: {
+                                ...commonChartOptions.scales.x,
+                                type: 'time',
+                                time: {
+                                    unit: 'day', // Adjust based on data density (e.g., 'month', 'week')
+                                     tooltipFormat: 'MMM dd, yyyy',
+                                    displayFormats: {
+                                        day: 'MMM dd'
+                                    }
+                                },
+                                title: { display: true, text: 'Date', color: commonChartOptions.scales.x.ticks.color }
+                            },
+                            y: {
+                                ...commonChartOptions.scales.y,
+                                title: { display: true, text: 'Net Cash Flow (USD)', color: commonChartOptions.scales.y.ticks.color }
+                            }
+                        },
+                        plugins: {
+                             ...commonChartOptions.plugins,
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                     label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
                                 }
                             }
                         }
                     }
+                });
+            }
+
+            // Initial chart data load
+            createSpendingByCategoryChart(@Html.Raw(Json.Serialize(Model.SpendingByCategoryChart.Data)));
+            createIncomeVsExpensesChart(@Html.Raw(Json.Serialize(Model.IncomeVsExpenseChart.Data)));
+            createCashFlowChart(@Html.Raw(Json.Serialize(Model.CashFlowChart.Data)));
+
+
+            // Filter logic
+            document.getElementById('applyFiltersBtn').addEventListener('click', function () {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const accountId = document.getElementById('accountId').value;
+                
+                // Construct URL with query parameters
+                let url = `@Url.Action("UpdateCharts", "Analytics")?startDate=${startDate}&endDate=${endDate}`;
+                if (accountId) {
+                    url += `&accountId=${accountId}`;
                 }
+                
+                // console.log("Fetching new chart data from:", url);
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // console.log("Received new chart data:", data);
+                        // Update summary cards
+                        document.querySelector('.grid div:nth-child(1) p').textContent = parseFloat(data.totalIncome).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                        document.querySelector('.grid div:nth-child(2) p').textContent = parseFloat(data.totalExpenses).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                        const netFlowEl = document.querySelector('.grid div:nth-child(3) p');
+                        netFlowEl.textContent = parseFloat(data.netFlow).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                        netFlowEl.className = `text-3xl font-bold ${data.netFlow >= 0 ? "text-blue-500" : "text-orange-500"}`;
+                        document.querySelector('.grid div:nth-child(4) p').textContent = data.totalTransactions;
+
+                        // Update charts
+                        createSpendingByCategoryChart(data.spendingByCategoryChart.data);
+                        createIncomeVsExpensesChart(data.incomeVsExpenseChart.data);
+                        createCashFlowChart(data.cashFlowChart.data);
+                        
+                        // Update recent transactions table (simplified: reloads the whole page for this part or implement AJAX table update)
+                        // For simplicity, we can just inform the user or they will see it on next full page load.
+                        // A more robust solution would be to fetch and re-render the table via JS.
+                        // This example focuses on chart updates.
+                        // Let's reload the page with new query parameters to update everything including the table.
+                        const queryParams = new URLSearchParams({
+                            startDate: startDate,
+                            endDate: endDate,
+                            accountId: accountId
+                        });
+                        window.location.search = queryParams.toString();
+
+
+                    })
+                    .catch(error => {
+                        console.error('Error fetching updated chart data:', error);
+                        // You could display an error message to the user here
+                        alert('Failed to update analytics data. Please try again.');
+                    });
             });
             
-            // Savings Rate Chart
-            const savingsRateData = {
-                labels: savingsRates.map(item => months[item.month - 1]),
-                datasets: [{
-                    label: 'Savings Rate',
-                    data: savingsRates.map(item => item.savingsRate),
-                    borderColor: 'rgba(139, 92, 246, 1)', // Purple
-                    backgroundColor: savingsRates.map(item => 
-                        item.savingsRate >= 20 ? 'rgba(16, 185, 129, 0.7)' : // Green
-                        item.savingsRate >= 10 ? 'rgba(250, 204, 21, 0.7)' : // Yellow
-                        'rgba(239, 68, 68, 0.7)' // Red
-                    ),
-                    borderWidth: 1
-                }]
-            };
-            
-            new Chart(document.getElementById('savingsRateChart'), {
-                type: 'bar',
-                data: savingsRateData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+            // Theme switcher awareness for charts
+            const observer = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        // Re-render charts with updated theme options
+                        // This is a simplified approach. A more robust solution might involve
+                        // updating chart options directly without full re-render if Chart.js supports it easily.
+                        if (spendingByCategoryChartInstance) {
+                             spendingByCategoryChartInstance.options = {...spendingByCategoryChartInstance.options, ...getUpdatedThemeOptions() };
+                             spendingByCategoryChartInstance.update();
+                        }
+                        if (incomeVsExpensesChartInstance) {
+                            incomeVsExpensesChartInstance.options = {...incomeVsExpensesChartInstance.options, ...getUpdatedThemeOptions() };
+                            incomeVsExpensesChartInstance.update();
+                        }
+                        if (cashFlowChartInstance) {
+                            cashFlowChartInstance.options = {...cashFlowChartInstance.options, ...getUpdatedThemeOptions() };
+                            cashFlowChartInstance.update();
+                        }
+                    }
+                }
+            });
+
+            observer.observe(document.body, { attributes: true });
+
+            function getUpdatedThemeOptions() {
+                const isDarkMode = document.body.classList.contains('dark');
+                return {
                     plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Savings Rate: ' + context.raw.toFixed(1) + '%';
-                                }
-                            }
+                        legend: {
+                            labels: { color: isDarkMode ? '#D1D5DB' : '#374151' }
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Category Spending Chart
-            const categories = [...new Set(monthlyCategorySpending.map(item => item.category))];
-            const categoryData = {
-                labels: months,
-                datasets: categories.map((category, index) => {
-                    return {
-                        label: category,
-                        data: months.map((_, monthIndex) => {
-                            const match = monthlyCategorySpending.find(
-                                item => item.category === category && item.month === monthIndex + 1
-                            );
-                            return match ? match.amount : 0;
-                        }),
-                        backgroundColor: chartColors[index % chartColors.length],
-                        borderWidth: 1
-                    };
-                })
-            };
-            
-            new Chart(document.getElementById('categorySpendingChart'), {
-                type: 'bar',
-                data: categoryData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
                         x: {
-                            stacked: true,
+                            ticks: { color: isDarkMode ? '#9CA3AF' : '#4B5563' },
+                            grid: { color: isDarkMode ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.5)' }
                         },
                         y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
+                            ticks: { color: isDarkMode ? '#9CA3AF' : '#4B5563' },
+                            grid: { color: isDarkMode ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.5)' }
                         }
                     }
-                }
-            });
-            
-            // Day of Week Spending Chart
-            const dayOfWeekData = {
-                labels: days,
-                datasets: [{
-                    label: 'Spending by Day of Week',
-                    data: dayOfWeekSpending.map(item => item.amount),
-                    backgroundColor: chartColors.slice(0, 7),
-                    borderWidth: 1
-                }]
-            };
-            
-            new Chart(document.getElementById('dayOfWeekSpendingChart'), {
-                type: 'pie',
-                data: dayOfWeekData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
-                                    return `${context.label}: $${context.raw.toLocaleString()} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Top Categories
-            const categoriesContainer = document.getElementById('topCategories');
-            categoriesContainer.innerHTML = '';
-            
-            topCategories.forEach((category, index) => {
-                const percentage = (category.amount / topCategories.reduce((a, b) => a + b.amount, 0) * 100).toFixed(1);
-                
-                const item = document.createElement('div');
-                item.className = 'mb-4';
-                item.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm font-medium text-gray-800">${category.category}</span>
-                        <span class="text-sm font-semibold text-gray-800">$${category.amount.toLocaleString()}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-indigo-600 h-2.5 rounded-full" style="width: ${percentage}%"></div>
-                    </div>
-                    <div class="flex justify-between items-center mt-1">
-                        <span class="text-xs text-gray-500">${percentage}%</span>
-                        <span class="text-xs text-gray-500">${category.count} transactions</span>
-                    </div>
-                `;
-                categoriesContainer.appendChild(item);
-            });
-            
-            // Top Merchants
-            const merchantsContainer = document.getElementById('topMerchants');
-            merchantsContainer.innerHTML = '';
-            
-            topMerchants.forEach((merchant, index) => {
-                const percentage = (merchant.amount / topMerchants.reduce((a, b) => a + b.amount, 0) * 100).toFixed(1);
-                
-                const item = document.createElement('div');
-                item.className = 'mb-4';
-                item.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm font-medium text-gray-800">${merchant.merchant}</span>
-                        <span class="text-sm font-semibold text-gray-800">$${merchant.amount.toLocaleString()}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-purple-600 h-2.5 rounded-full" style="width: ${percentage}%"></div>
-                    </div>
-                    <div class="flex justify-between items-center mt-1">
-                        <span class="text-xs text-gray-500">${percentage}%</span>
-                        <span class="text-xs text-gray-500">${merchant.count} transactions</span>
-                    </div>
-                `;
-                merchantsContainer.appendChild(item);
-            });
-            
-            // Projected Expenses
-            const projectedExpensesData = {
-                labels: months.slice(0, 3),
-                datasets: [{
-                    label: 'Projected Expenses',
-                    data: [4250, 3850, 4100], // Sample data
-                    backgroundColor: 'rgba(139, 92, 246, 0.7)', // Purple
-                    borderColor: 'rgba(139, 92, 246, 1)',
-                    borderWidth: 1
-                }]
-            };
-            
-            new Chart(document.getElementById('projectedExpensesChart'), {
-                type: 'bar',
-                data: projectedExpensesData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-        
-        // AI Insights and Budget Goals Functions
-        
-        // Budget Goal Modal Functions
-        function openBudgetGoalModal() {
-            document.getElementById('budgetGoalModal').classList.remove('hidden');
-            loadCategories();
-            document.getElementById('goalStartDate').value = new Date().toISOString().split('T')[0];
-        }
-        
-        function closeBudgetGoalModal() {
-            document.getElementById('budgetGoalModal').classList.add('hidden');
-            document.getElementById('budgetGoalForm').reset();
-        }
-        
-        function loadCategories() {
-            fetch('/api/categories')
-                .then(response => response.json())
-                .then(categories => {
-                    const select = document.getElementById('goalCategory');
-                    select.innerHTML = '<option value="">Select a category</option>';
-                    categories.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category.id;
-                        option.textContent = category.name;
-                        select.appendChild(option);
-                    });
-                });
-        }
-        
-        // Handle Budget Goal Form Submission
-        document.getElementById('budgetGoalForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const goalData = {
-                categoryId: parseInt(document.getElementById('goalCategory').value),
-                amount: parseFloat(document.getElementById('goalAmount').value),
-                startDate: document.getElementById('goalStartDate').value,
-                notes: document.getElementById('goalNotes').value
-            };
-            
-            fetch('/api/budgetgoals', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(goalData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeBudgetGoalModal();
-                    loadBudgetGoals();
-                    showNotification('Budget goal created successfully!', 'success');
-                } else {
-                    showNotification('Error creating budget goal', 'error');
-                }
-            });
-        });
-        
-        // Load Budget Goals
-        function loadBudgetGoals() {
-            fetch('/api/budgetgoals')
-                .then(response => response.json())
-                .then(goals => {
-                    const container = document.getElementById('budgetGoalsContainer');
-                    container.innerHTML = '';
-                    
-                    if (goals.length === 0) {
-                        container.innerHTML = '<p class="text-gray-500 text-sm">No budget goals set. Click "Add Goal" to create your first budget goal.</p>';
-                        return;
-                    }
-                    
-                    goals.forEach(goal => {
-                        const progressPercentage = Math.min((goal.spent / goal.amount) * 100, 100);
-                        const isOverBudget = goal.spent > goal.amount;
-                        
-                        const goalElement = document.createElement('div');
-                        goalElement.className = 'border-l-4 border-indigo-500 pl-4 py-3 bg-gray-50 rounded-r-lg hover:bg-gray-100 transition-colors';
-                        goalElement.innerHTML = `
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="font-medium text-gray-800">${goal.categoryName}</h4>
-                                <span class="text-sm ${isOverBudget ? 'text-red-600 font-semibold' : 'text-gray-600'}">
-                                    $${goal.spent.toLocaleString()} / $${goal.amount.toLocaleString()}
-                                </span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-                                <div class="h-2.5 rounded-full ${isOverBudget ? 'bg-red-500' : 'bg-indigo-600'}" 
-                                     style="width: ${Math.min(progressPercentage, 100)}%"></div>
-                            </div>
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="${isOverBudget ? 'text-red-600' : 'text-gray-500'}">
-                                    ${progressPercentage.toFixed(1)}% ${isOverBudget ? 'over budget' : 'used'}
-                                </span>
-                                <span class="text-gray-500">
-                                    ${isOverBudget ? 'Over by $' + (goal.spent - goal.amount).toLocaleString() : 
-                                      'Remaining: $' + (goal.amount - goal.spent).toLocaleString()}
-                                </span>
-                            </div>
-                        `;
-                        container.appendChild(goalElement);
-                    });
-                });
-        }
-        
-        // Refresh AI Insights
-        function refreshAIInsights() {
-            const container = document.getElementById('aiInsightsContainer');
-            const savingsRec = document.getElementById('savingsRecommendation');
-            const budgetRec = document.getElementById('budgetRecommendation');
-            const investmentRec = document.getElementById('investmentRecommendation');
-            
-            // Show loading state
-            container.innerHTML = `
-                <div class="flex items-start space-x-3">
-                    <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
-                        <span class="text-white text-xs">🤖</span>
-                    </div>
-                    <div>
-                        <h5 class="text-sm font-medium text-gray-800">AI is analyzing your financial data...</h5>
-                        <p class="text-sm text-gray-600">This may take a few moments.</p>
-                    </div>
-                </div>
-            `;
-            
-            savingsRec.innerHTML = 'Generating personalized savings recommendations...';
-            budgetRec.innerHTML = 'Analyzing spending patterns...';
-            investmentRec.innerHTML = 'Evaluating investment opportunities...';
-            
-            // Fetch AI insights
-            fetch('/FinanceAI/GetInsights', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update AI insights container
-                    container.innerHTML = '';
-                    data.insights.forEach((insight, index) => {
-                        const icons = ['💡', '📈', '⚠️', '🎯', '💰'];
-                        const colors = ['from-green-500 to-emerald-600', 'from-blue-500 to-indigo-600', 'from-yellow-500 to-orange-600', 'from-purple-500 to-pink-600', 'from-indigo-500 to-purple-600'];
-                        
-                        const insightElement = document.createElement('div');
-                        insightElement.className = 'flex items-start space-x-3 mb-3';
-                        insightElement.innerHTML = `
-                            <div class="w-8 h-8 bg-gradient-to-r ${colors[index % colors.length]} rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white text-xs">${icons[index % icons.length]}</span>
-                            </div>
-                            <div>
-                                <h5 class="text-sm font-medium text-gray-800">${insight.title}</h5>
-                                <p class="text-sm text-gray-600">${insight.description}</p>
-                            </div>
-                        `;
-                        container.appendChild(insightElement);
-                    });
-                    
-                    // Update recommendation cards
-                    if (data.recommendations) {
-                        savingsRec.innerHTML = data.recommendations.savings || 'No specific savings recommendations at this time.';
-                        budgetRec.innerHTML = data.recommendations.budget || 'Your budget allocation looks good overall.';
-                        investmentRec.innerHTML = data.recommendations.investment || 'Consider diversifying your investment portfolio.';
-                    }
-                } else {
-                    container.innerHTML = `
-                        <div class="flex items-start space-x-3">
-                            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white text-xs">⚠️</span>
-                            </div>
-                            <div>
-                                <h5 class="text-sm font-medium text-red-800">Unable to generate insights</h5>
-                                <p class="text-sm text-red-600">Please try again later or ensure you have sufficient transaction data.</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching AI insights:', error);
-                showNotification('Error loading AI insights', 'error');
-            });
-        }
-        
-        // Notification function
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
-                type === 'success' ? 'bg-green-500 text-white' : 
-                type === 'error' ? 'bg-red-500 text-white' : 
-                'bg-blue-500 text-white'
-            }`;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-        
-        // Initialize AI insights and budget goals on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load budget goals and AI insights
-            loadBudgetGoals();
-            
-            // Auto-refresh AI insights every 5 minutes
-            setInterval(refreshAIInsights, 300000);
+                };
+            }
+
         });
     </script>
 }

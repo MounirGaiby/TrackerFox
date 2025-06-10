@@ -14,7 +14,6 @@ namespace PersonalFinanceTracker.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<BudgetGoalModel> BudgetGoals { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
 
@@ -29,10 +28,6 @@ namespace PersonalFinanceTracker.Data
 
             builder.Entity<Transaction>()
                 .Property(t => t.Amount)
-                .HasPrecision(18, 2);
-
-            builder.Entity<BudgetGoalModel>()
-                .Property(g => g.Amount)
                 .HasPrecision(18, 2);
 
             // Configure relationships
@@ -52,12 +47,6 @@ namespace PersonalFinanceTracker.Data
                 .HasOne(t => t.Category)
                 .WithMany(c => c.Transactions)
                 .HasForeignKey(t => t.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<BudgetGoalModel>()
-                .HasOne<Category>()
-                .WithMany()
-                .HasForeignKey(g => g.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Conversation and ChatMessage relationships

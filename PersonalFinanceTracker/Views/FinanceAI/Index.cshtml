@@ -3,7 +3,7 @@
     ViewData["Title"] = "AI Financial Assistant";
 }
 
-<div class="max-w-4xl mx-auto p-6">
+<div class="max-w-6xl mx-auto p-6">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
         <!-- Header -->
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 text-white p-6">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <!-- Welcome Message -->
+        @* <!-- Welcome Message -->
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
             <div class="flex items-start space-x-3">
                 <div class="bg-blue-500 dark:bg-blue-600 rounded-full p-2 flex-shrink-0">
@@ -32,10 +32,10 @@
                     <p class="text-blue-800 dark:text-blue-200">@Model.WelcomeMessage</p>
                 </div>
             </div>
-        </div>
+        </div> *@
 
         <!-- Chat Container -->
-        <div class="flex flex-col h-96">
+        <div class="flex flex-col h-screen">
             <!-- Messages Area -->
             <div id="messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-50 dark:bg-gray-900/50">
                 <!-- Messages will be dynamically added here -->

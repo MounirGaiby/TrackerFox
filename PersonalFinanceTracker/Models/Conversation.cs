@@ -46,7 +46,6 @@ namespace PersonalFinanceTracker.Models
     {
         public bool IncludeAccounts { get; set; } = true;
         public bool IncludeTransactions { get; set; } = true;
-        public bool IncludeBudgetGoals { get; set; } = true;
         public bool IncludeSpendingCategories { get; set; } = true;
         public bool IncludeInvestments { get; set; } = false;
         public bool IncludeDebts { get; set; } = false;
