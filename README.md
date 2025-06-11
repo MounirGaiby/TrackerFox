@@ -1,4 +1,4 @@
-# Personal Finance Tracker "TrackFox"
+![image](https://github.com/user-attachments/assets/87c7f968-19c9-4347-bdb7-82b9343c1112)# Personal Finance Tracker "TrackFox"
 
 A comprehensive personal finance management web application built with ASP.NET Core and Tailwind CSS. This application helps users manage their finances, track spending, analyze financial data, monitor market trends, and get AI-powered financial insights.
 
@@ -6,9 +6,23 @@ A comprehensive personal finance management web application built with ASP.NET C
 
 ### Core Financial Management
 - **Dashboard**: Overview of financial status, recent transactions, and account balances.
+  ![image](https://github.com/user-attachments/assets/2927f7a5-24c6-4e41-8a1e-bf919b608fcc)
+
 - **Accounts**: Manage multiple bank and investment accounts (e.g., savings, checking, investment portfolios).
+  ![image](https://github.com/user-attachments/assets/7e929099-30b5-48a5-bb3b-463154b44438)
+
 - **Transactions**: Record, categorize, and manage income and expenses with detailed information.
-- **Categories**: Organize transactions by customizable categories for clear spending analysis.
+  ![image](https://github.com/user-attachments/assets/34eb1f2c-bb4f-4ad2-bfa5-c132c6673683)
+
+- **Analytics**: Visualize spending patterns, income trends, and investment performance with interactive charts and reports.
+  ![image](https://github.com/user-attachments/assets/d1f03883-cc0b-4202-abf3-91e91fcd5fdd)
+
+- **Market**: Access real-time updates on cryptocurrency and stock values, along with breaking financial news.
+  ![image](https://github.com/user-attachments/assets/8f359d06-0a6c-42f2-a10d-9de67d750440)
+
+- **FinBot**: Your dedicated finance chatbot, providing personalized financial advice and 24/7 support.
+  ![image](https://github.com/user-attachments/assets/7757c2bd-9337-432e-9ec9-ce25db25b334)
+
 
 ### Analytics
 - **Financial Insights**: Visual breakdown of spending by category using interactive charts.
