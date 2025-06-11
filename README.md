@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/87c7f968-19c9-4347-bdb7-82b9343c1112)# Personal Finance Tracker "TrackFox"
+# Personal Finance Tracker "TrackFox"
 
 A comprehensive personal finance management web application built with ASP.NET Core and Tailwind CSS. This application helps users manage their finances, track spending, analyze financial data, monitor market trends, and get AI-powered financial insights.
 
